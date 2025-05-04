@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+
+
+.primary-color{
+  color: #FFEBA7;
+}
+.secondary-color{
+color: #FFFFFF;
+}
+.highlight-text{
+  color: #7C6FC4;
+}
+.background-primary{
+  background-color: #181F2F;
+}
+.background-secondary{
+  background-color: #2B2E38;
+}
+.background-terciary{
+  background-color: #1F2029;
+}

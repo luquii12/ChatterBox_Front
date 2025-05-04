@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react';
 import supabase from './supabaseClient';  // Asegúrate de tener configurado tu cliente Supabase
 import "./index.css"
-
-/**
- * The `App` function in JavaScript React sets up a real-time chat application where users can send and
- * receive messages, with the ability to change their username dynamically.
- * @returns The `App` component is being returned, which contains a real-time chat interface where
- * users can send and receive messages. The component includes a chat box displaying messages, an input
- * field to type and send messages, and an input field with a button to change the current user's name.
- * The messages are fetched initially and new messages are received in real-time using Supabase.
- */
 function App() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
