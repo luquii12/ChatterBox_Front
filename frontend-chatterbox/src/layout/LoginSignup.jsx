@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/LoginSingIn.css";
+import UserServices from "../services/UserServices";
 
 const LoginSignup = () => {
   const [formLogIn, setFormLogIn] = useState({
@@ -33,6 +34,12 @@ const LoginSignup = () => {
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     console.log("Login Data:", formLogIn);
+    UserServices.logIn(formLogIn)
+    .then((response)=>{
+      console.log(response);
+    }).catch((error)=>{
+      console.log(error);
+    })
     // Aquí puedes agregar la lógica para enviar los datos de inicio de sesión al backend
   };
 
