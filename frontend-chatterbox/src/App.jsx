@@ -13,6 +13,7 @@ function App() {
 
   return (
  <Routes>
+  <Route path="/login" element={<LoginSignup/>}/>
 <Route path="/" element={<Layout/>}>
   <Route index element={<Home/>}/>
 
