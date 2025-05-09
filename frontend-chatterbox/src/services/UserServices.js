@@ -16,7 +16,7 @@ class UserServices {
 
 
      static creteGroup(data) {
-        return instance.post(`${API_URL}/register`, data)
+        return instance.post(`${API_URL}/grupo/crear`, data)
     }
 }
 

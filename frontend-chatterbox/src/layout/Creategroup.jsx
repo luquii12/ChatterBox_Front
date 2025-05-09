@@ -24,11 +24,35 @@ const Creategroup = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Group Created:", form);
-    fetch("grupo/crear");
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append("name", form.name);
+  formData.append("description", form.description);
+  formData.append("isPrivate", form.isPrivate);
+  if (form.image) {
+    formData.append("image", form.image);
+  }
+
+  try {
+    const response = await fetch("/grupos", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Error creating group");
+    }
+
+    const result = await response.json();
+    console.log("Group created successfully:", result);
+    window.location.reload();
+  } catch (error) {
+    console.error("Failed to create group:", error);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-[#0D1321] flex items-center justify-center p-6">
