@@ -10,6 +10,9 @@ class UserServices {
         return instance.post(`${API_URL}/login`, data)
 
     }
+    static signUp(data) {
+        return instance.post(`${API_URL}/register`, data)
+    }
 }
 
 export default UserServices;

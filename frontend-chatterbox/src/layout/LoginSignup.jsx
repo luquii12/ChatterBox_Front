@@ -7,10 +7,12 @@ const LoginSignup = () => {
     email: "",
     password: "",
   });
+  const [errorLogin, setErrorLogin] = useState({email: "", password: ""});
+  const [errorSignUp, setErrorSignUp] = useState({apodo: "", nombre_usuario: "", email: "", password: ""});
 
   const [formSignUp, setFormSignUp] = useState({
-    fullName: "",
-    phoneNumber: "",
+    apodo: "",
+    nombre_usuario: "",
     email: "",
     password: "",
   });
@@ -33,12 +35,23 @@ const LoginSignup = () => {
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
+    let errors={}
     console.log("Login Data:", formLogIn);
     UserServices.logIn(formLogIn)
     .then((response)=>{
       console.log(response);
+
     }).catch((error)=>{
-      console.log(error);
+      if(error.status === 404) {
+      errors.email = "Email not found";
+      }
+      if (error.status === 401) {
+        
+errors.password = "Invalid password";      
+      }   
+    
+    setErrorLogin(errors);
+
     })
     // Aquí puedes agregar la lógica para enviar los datos de inicio de sesión al backend
   };
@@ -46,6 +59,18 @@ const LoginSignup = () => {
   const handleSignUpSubmit = (e) => {
     e.preventDefault();
     console.log("Sign Up Data:", formSignUp);
+
+    UserServices.signUp(formSignUp)
+    .then((response)=>{
+      console.log(response);
+    }
+    ).catch((error)=>{
+      if(error.status === 400) {
+        errorSignUp.apodo = "Invalid name";
+      }
+      if (error.status === 409) {
+        errorSignUp.nombre_usuario = "Username already exists";
+      }})
     // Aquí puedes agregar la lógica para enviar los datos de registro al backend
   };
 
@@ -85,8 +110,11 @@ const LoginSignup = () => {
                                 value={formLogIn.email}
                                 onChange={handleLoginChange}
                               />
+
                               <i className="input-icon uil uil-at"></i>
                             </div>
+                            {errorLogin.email && 
+                              <p className="text-red-500 text-sm">{errorLogin.email}</p>}
                             <div className="form-group mb-4 mt-2">
                               <input
                                 type="password"
@@ -98,6 +126,8 @@ const LoginSignup = () => {
                               />
                               <i className="input-icon uil uil-lock-alt"></i>
                             </div>
+                            {errorLogin.password && 
+                              <p className="text-red-500 text-sm">{errorLogin.password}</p>}
                             <button type="submit" className="btn mt-4">
                               Login
                             </button>
@@ -120,10 +150,10 @@ const LoginSignup = () => {
                             <div className="form-group mb-4">
                               <input
                                 type="text"
-                                name="fullName"
+                                name="apodo"
                                 className="form-style"
                                 placeholder="Full Name"
-                                value={formSignUp.fullName}
+                                value={formSignUp.apodo}
                                 onChange={handleSignUpChange}
                               />
                               <i className="input-icon uil uil-user"></i>
@@ -131,10 +161,10 @@ const LoginSignup = () => {
                             <div className="form-group mb-4 mt-2">
                               <input
                                 type="tel"
-                                name="phoneNumber"
+                                name="nombre_usuario"
                                 className="form-style"
                                 placeholder="Phone Number"
-                                value={formSignUp.phoneNumber}
+                                value={formSignUp.nombre_usuario}
                                 onChange={handleSignUpChange}
                               />
                               <i className="input-icon uil uil-phone"></i>
