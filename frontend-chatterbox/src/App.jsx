@@ -6,6 +6,8 @@ import Sidebar from "./components/Sidebar"
 import Layout from "./layout/Layout"
 import Card from "./components/Card"
 import Home from "./layout/Home"
+import Creategroup from "./layout/CreateGroup"
+import Welcome from "./layout/Welcome"
 
 
 
@@ -14,8 +16,11 @@ function App() {
   return (
  <Routes>
   <Route path="/login" element={<LoginSignup/>}/>
-<Route path="/" element={<Layout/>}>
+  <Route path="/" element={<Layout/>}>
   <Route index element={<Home/>}/>
+
+  <Route path="/create" element={<Creategroup/>}></Route>
+   <Route path="/welcome" element={<Welcome/>}></Route>
 
 </Route>
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/LoginSingIn.css";
 import UserServices from "../services/UserServices";
+import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
   const [formLogIn, setFormLogIn] = useState({
@@ -9,6 +10,7 @@ const LoginSignup = () => {
   });
   const [errorLogin, setErrorLogin] = useState({email: "", password: ""});
   const [errorSignUp, setErrorSignUp] = useState({apodo: "", nombre_usuario: "", email: "", password: ""});
+const navigate = useNavigate();
 
   const [formSignUp, setFormSignUp] = useState({
     apodo: "",
@@ -40,6 +42,8 @@ const LoginSignup = () => {
     UserServices.logIn(formLogIn)
     .then((response)=>{
       console.log(response);
+      navigate("/");
+
 
     }).catch((error)=>{
       if(error.status === 404) {
@@ -63,6 +67,7 @@ errors.password = "Invalid password";
     UserServices.signUp(formSignUp)
     .then((response)=>{
       console.log(response);
+      
     }
     ).catch((error)=>{
       if(error.status === 400) {

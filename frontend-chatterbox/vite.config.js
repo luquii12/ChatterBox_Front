@@ -13,8 +13,8 @@ export default defineConfig({
   },
   server: {
     https: {
-      key: fs.readFileSync('localhost-key.pem'),
-      cert: fs.readFileSync('localhost.pem'),
+      key: fs.readFileSync('certificates/localhost.key'),
+      cert: fs.readFileSync('certificates/localhost.crt'),
     },
     port: 5173,
     proxy: {
