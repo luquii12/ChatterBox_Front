@@ -1,4 +1,4 @@
-import jwtDecode from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 export function isTokenExpired(token) {
   if (!token) return true;
@@ -13,3 +13,4 @@ export function isTokenExpired(token) {
     return true; // Si no se puede decodificar, asumimos que no es válido
   }
 }
+export default isTokenExpired;
