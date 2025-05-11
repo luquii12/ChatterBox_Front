@@ -7,6 +7,7 @@ import Layout from "./layout/Layout"
 import Card from "./components/Card"
 import Home from "./layout/Home"
 import Creategroup from "./layout/CreateGroup"
+import Welcome from "./layout/Welcome"
 
 
 
@@ -18,8 +19,8 @@ function App() {
   <Route path="/" element={<Layout/>}>
   <Route index element={<Home/>}/>
 
-   <Route path="/create" element={<Creategroup/>}></Route>
-
+  <Route path="/create" element={<Creategroup/>}></Route>
+   <Route path="/welcome" element={<Welcome/>}></Route>
 
 </Route>
 

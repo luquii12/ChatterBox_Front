@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
   const navigate = useNavigate();
   return (
-  <header className="flex items-center justify-between bg-[#1A1A1A] text-white p-4">
+  <header className="flex items-center justify-between background-secondary text-white p-4">
  
   <div className="flex items-center gap-4">
     <div className="w-10 h-10 rounded-full border-2 border-white flex items-center justify-center">
