@@ -9,6 +9,7 @@ import Home from "./layout/Home";
 import Creategroup from "./layout/CreateGroup";
 import { AuthProvider } from "./auth/AuthProvider";
 import RutaProtegida from "./auth/RutasProtegidas";
+import Group from "./layout/Group";
 function App() {
   return (
     <AuthProvider>
@@ -21,6 +22,7 @@ function App() {
         }>
           <Route index element={<Home />} />
           <Route path="/create" element={<Creategroup />} />
+          <Route path="/group/:id" element={<Group />} />
         </Route>
       </Routes>
     </AuthProvider>

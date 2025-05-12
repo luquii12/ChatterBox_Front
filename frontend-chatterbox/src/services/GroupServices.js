@@ -11,6 +11,9 @@ class GroupServices {
         return instance.get(`${API_URL}/${id}/grupos`)
 
     }
+    static getChatsFromGroup(id) {
+        return instance.get(`/grupos/${id}/chats`)
+    }
  
 }
 

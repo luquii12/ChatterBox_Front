@@ -1,8 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
-const Card = ({ title, description, image }) => {
+const Card = ({ title, description, image,id }) => {
+    const navigate = useNavigate();
+
+const goGroup=(id)=>{
+navigate(`/group/${id}`);
+}
+
+
   return (
-    <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+    <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700" onClick={()=>{goGroup(id)}}>
       <img className="rounded-t-lg w-full h-48 object-cover" src={image} alt={title} />
       <div className="p-5">
         <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
