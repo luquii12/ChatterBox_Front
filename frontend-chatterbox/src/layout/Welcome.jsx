@@ -1,5 +1,4 @@
-import React from "react";
- 
+
 
 const Welcome = () => {
   return (
@@ -29,3 +28,4 @@ const Welcome = () => {
   );
 };
 export default Welcome;
+
