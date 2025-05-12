@@ -24,6 +24,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/create" element={<Creategroup />} />
           <Route path="/group/:id" element={<Group />} />
+         
         </Route>
       </Routes>
     </AuthProvider>

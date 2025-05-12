@@ -13,7 +13,7 @@ const Home = () => {
   
   const [groups, setGroups] = useState([]);
 useEffect(() => {
-GroupServices.getAllGroups("1").then((response) => {
+GroupServices.getAllGroups(user.usuario.id_usuario).then((response) => {
   setGroups(response.data);
 }
 ).catch((error) => {

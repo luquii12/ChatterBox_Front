@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import "../styles/LoginSingIn.css";
+import { useAuth } from "../auth/AuthProvider";
+import UserServices from "../services/UserServices";
+
 
 const Creategroup = () => {
+  const { user } = useAuth();
+  console.log("Usuariooo:", user);
+
+
+  
   const [form, setForm] = useState({
+    id_usuario: user.usuario.id_usuario,
     name: "",
     image: null,
     isPrivate: false,
     description: "",
   });
 
+console.log( user.usuario.id_usuario)
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -27,30 +37,26 @@ const Creategroup = () => {
  const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const formData = new FormData();
-  formData.append("name", form.name);
-  formData.append("description", form.description);
-  formData.append("isPrivate", form.isPrivate);
-  if (form.image) {
-    formData.append("image", form.image);
-  }
+  const payload = {
+    id_usuario_creador: form.id_usuario,
+    nombre_grupo: form.name,
+    descripcion: form.description,
+    es_privado: form.isPrivate,
+    foto_grupo: null, 
+  };
 
-  try {
-    const response = await fetch("/grupos", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error("Error creating group");
-    }
-
-    const result = await response.json();
-    console.log("Group created successfully:", result);
-    window.location.reload();
-  } catch (error) {
-    console.error("Failed to create group:", error);
-  }
+    UserServices.creteGroup(payload)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        if (error.status === 400) {
+          errorSignUp.apodo = "Invalid name";
+        }
+        if (error.status === 409) {
+          errorSignUp.nombre_usuario = "Username already exists";
+        }
+      });
 };
 
 
