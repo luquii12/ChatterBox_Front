@@ -33,8 +33,10 @@ const Footer = () => (
     {/* Bottom copyright */}
     <div className="text-center text-xs text-white-500 mt-4">
       Â© 2025 Chatterbox. All rights reserved.
+
     </div>
   </footer>
 );
 
 export default Footer;
+

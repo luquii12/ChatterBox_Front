@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 
 
 
+
 const Header = () => {
   const navigate = useNavigate();
   return (
@@ -11,6 +12,7 @@ const Header = () => {
     <div onClick={()=>{
       navigate("/");
     }} className="w-10 h-10 rounded-full border-2 border-white flex items-center justify-center">
+
       <span className="text-xl">👤</span> 
     </div>
     <button className="text-2xl">
@@ -24,6 +26,7 @@ const Header = () => {
     </button>
     <button className="bg-[#F5D67B] text-black font-semibold px-4 py-2 rounded hover:bg-yellow-400 transition" 
      onClick={() => navigate("/create")}>
+
       NEW GROUP
     </button>
   </div>

@@ -10,6 +10,7 @@ import Creategroup from "./layout/CreateGroup";
 import { AuthProvider } from "./auth/AuthProvider";
 import RutaProtegida from "./auth/RutasProtegidas";
 import Group from "./layout/Group";
+
 function App() {
   return (
     <AuthProvider>
@@ -27,6 +28,7 @@ function App() {
       </Routes>
     </AuthProvider>
   );
+
 }
 
 export default App;

@@ -5,6 +5,8 @@ import { useAuth } from "../auth/AuthProvider";
 import TextChat from "../components/TextChat";
 import Sidebar from "../components/Sidebar";
 
+
+
 const Home = () => {
   const {user}=useAuth()
   console.log(user);
