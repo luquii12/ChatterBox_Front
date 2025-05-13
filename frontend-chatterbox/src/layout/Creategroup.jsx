@@ -50,12 +50,8 @@ console.log( user.usuario.id_usuario)
         console.log(response);
       })
       .catch((error) => {
-        if (error.status === 400) {
-          errorSignUp.apodo = "Invalid name";
-        }
-        if (error.status === 409) {
-          errorSignUp.nombre_usuario = "Username already exists";
-        }
+        console.log("error")
+       
       });
 };
 
