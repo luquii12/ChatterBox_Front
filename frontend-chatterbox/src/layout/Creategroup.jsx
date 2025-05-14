@@ -57,8 +57,8 @@ console.log( user.usuario.id_usuario)
 
 
   return (
-    <div className="min-h-screen bg-[#0D1321] flex items-center justify-center p-6">
-      <div className="bg-[#1E1E2F] text-white p-8 rounded-lg border border-yellow-300 shadow-xl w-full max-w-md">
+    <div className="min-h-screen bg-[#0D1321] flex items-center justify-center p-6 ">
+      <div className="bg-[#1E1E2F] text-white p-8 rounded-lg border primary-color w-full max-w-md  shadow-[0_1px_15px_rgba(0,0,0,0.2)] shadow-yellow-100">
         <h2 className="text-center text-3xl font-bold text-[#F5D67B] mb-8 tracking-wide">
           Create Group
         </h2>
@@ -100,7 +100,7 @@ console.log( user.usuario.id_usuario)
                   checked={form.isPrivate}
                   onChange={handleChange}
                 />
-                <div className="w-11 h-6 bg-gray-400 rounded-full peer peer-checked:bg-yellow-400 peer-focus:ring-2 peer-focus:ring-yellow-400 transition duration-300"></div>
+                <div className="w-11 h-6 bg-gray-400 rounded-full peer peer-checked:bg-yellow-400 peer-focus:ring-2 peer-focus primary-color transition duration-300"></div>
               </label>
               <span className="text-sm">Private group</span>
             </div>
