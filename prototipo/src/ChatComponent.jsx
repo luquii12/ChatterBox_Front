@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const ChatComponent = ({ chatId, usuarioId }) => {
   const [messages, setMessages] = useState([]);
@@ -16,6 +17,29 @@ const ChatComponent = ({ chatId, usuarioId }) => {
       console.warn("Token no encontrado en localStorage");
     }
   }, []);
+
+  // Cargar los últimos 20 mensajes por HTTP
+  useEffect(() => {
+    if (!token || !chatId) return;
+
+    const cargarMensajes = async () => {
+      try {
+        const respuesta = await axios.get(
+          `https://localhost:8443/chats/${chatId}/mensajes?limite=3`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setMessages(respuesta.data);
+      } catch (error) {
+        console.error("Error al cargar los mensajes del historial", error);
+      }
+    };
+
+    cargarMensajes();
+  }, [token, chatId]);
 
   // Configuración del WebSocket
   useEffect(() => {
