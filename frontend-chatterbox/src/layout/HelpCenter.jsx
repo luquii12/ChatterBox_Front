@@ -3,7 +3,7 @@ import { ShieldCheck, Settings, HelpCircle } from "lucide-react";
 
 const HelpCenter = () => {
   return (
-    <div className="min-h-screen bg-[#12172a] text-white flex flex-col items-center px-6 py-20 space-y-20">
+    <div className="min-h-screen bg-[#12172a] text-white flex flex-col items-center px- pt-10 pb-10 py-25 space-y-26">
       <div className="text-center space-y-6">
         <h1 className="text-6xl font-bold text-yellow-200">Help Center</h1>
         <p className="text-4xl font-semibold text-white">Need help? Count on us.</p>
