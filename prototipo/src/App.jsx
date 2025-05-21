@@ -1,5 +1,6 @@
 import React from "react";
 import ChatComponent from "./ChatComponent"; // Importa el componente de chat
+import PruebaImg from "./PruebaImg";
 
 const App = () => {
   // Aquí defines manualmente el chatId, usuarioId y token para probar
@@ -10,7 +11,8 @@ const App = () => {
     <div>
       <h1>Aplicación de Chat</h1>
       {/* Pasa los props al ChatComponent */}
-      <ChatComponent chatId={chatId} usuarioId={usuarioId} />
+      {/* <ChatComponent chatId={chatId} usuarioId={usuarioId} /> */}
+      <PruebaImg/>
     </div>
   );
 };

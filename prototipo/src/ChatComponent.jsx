@@ -77,8 +77,6 @@ const ChatComponent = ({ chatId, usuarioId }) => {
   const enviarMensaje = () => {
     if (contenido.trim() && socket?.readyState === WebSocket.OPEN) {
       const mensaje = {
-        id_usuario: usuarioId,
-        id_chat: chatId,
         contenido: contenido,
       };
 
