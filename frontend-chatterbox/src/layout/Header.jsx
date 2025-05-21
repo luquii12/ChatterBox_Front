@@ -45,19 +45,19 @@ const Header = () => {
           <button
             id="menu-button"
             onClick={() => setDropdownOpen(true)}
-            className="text-3xl hover:text-yellow-300 transition"
+            className="text-3xl hover:text-yellow-300 transition cursor-pointer"
           >
             ☰
           </button>
         </div>
 
         {/* Botones de la derecha */}
-        <div className="flex items-center gap-4 pr-6">
-          <button className="bg-transparent text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition">
+        <div className="flex items-center gap-4 pr-6 ">
+          <button className="background-terciary primary-color px-4 py-2 rounded hover:bg-white hover:text-black transition cursor-pointer">
             JOIN GROUP
           </button>
           <button
-            className="bg-[#F5D67B] text-black font-semibold px-4 py-2 rounded hover:bg-yellow-400 transition"
+            className="bg-[#F5D67B] text-black font-semibold px-4 py-2 rounded hover:bg-yellow-400 transition cursor-pointer"
             onClick={() => navigate("/create")}
           >
             NEW GROUP
@@ -77,13 +77,23 @@ const Header = () => {
             <h2 className="text-lg font-semibold text-yellow-300">Menú</h2>
             <button
               onClick={() => setDropdownOpen(false)}
-              className="text-xl text-gray-400 hover:text-white"
+              className="text-xl text-gray-400 hover:text-white "
             >
               ✕
             </button>
           </div>
 
           <ul className="space-y-2 text-sm font-medium">
+            <li
+              className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
+              onClick={() => {
+                
+                navigate("/"); //Hihcam perro ponle aqui donde quieres navegar 
+                setDropdownOpen(false);
+              }}
+            >
+              👥 Groups
+            </li>
             <li
               className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
               onClick={() => {
@@ -115,11 +125,6 @@ const Header = () => {
             >
               🆘 Help Center
             </li>
-
-
-              
-
-
             
             <li
               className="hover:bg-red-500 hover:text-white px-4 py-2 rounded cursor-pointer transition"

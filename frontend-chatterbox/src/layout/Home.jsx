@@ -1,35 +1,36 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "../components/Card";
 import GroupServices from "../services/GroupServices";
 import { useAuth } from "../auth/AuthProvider";
-import TextChat from "../components/TextChat";
-import Sidebar from "../components/Sidebar";
-
-
 
 const Home = () => {
-  const {user}=useAuth()
-  console.log(user);
-  
+  const { user } = useAuth();
   const [groups, setGroups] = useState([]);
-useEffect(() => {
-GroupServices.getAllGroups(user.usuario.id_usuario).then((response) => {
-  setGroups(response.data);
-}
-).catch((error) => {
-  console.error("Error fetching groups:", error);
-});
 
-
-},[])
-
-
-  return (
-    <div className="container mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-8 text-center">Bienvenido a Nuestra Página</h1>
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+  useEffect(() => {
+    if (user?.usuario?.id_usuario) {
+      GroupServices.getAllGroups(user.usuario.id_usuario)
+        .then((response) => {
+          setGroups(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching groups:", error);
+        });
+    }
+  }, [user]);
+ return (
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-15 background-primary">
+      <h1 className="text-6xl font-bold mb-15 text-center">MY GROUPS</h1>
+      <div className="grid gap-25 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full max-w-[1400px]">
         {groups.map((group) => (
-          <Card key={group.id_grupo} id={group.id_grupo} title={group.nombre_grupo} description={group.descripcion} image={group.foto_grupo} />
+          <div key={group.id_grupo} className="cursor-pointer">
+            <Card
+              id={group.id_grupo}
+              title={group.nombre_grupo}
+              description={group.descripcion}
+              image={group.foto_grupo}
+            />
+          </div>
         ))}
       </div>
     </div>
