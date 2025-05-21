@@ -10,6 +10,10 @@ import Creategroup from "./layout/CreateGroup";
 import { AuthProvider } from "./auth/AuthProvider";
 import RutaProtegida from "./auth/RutasProtegidas";
 import Group from "./layout/Group";
+import HelpCenter from "./layout/HelpCenter";
+import AccountSettings from "./layout/AccountSettings";
+import PrivacyPolicy from "./layout/PrivacyPolicy";
+import JoinGroup from "./layout/JoinGorup";
 
 function App() {
   return (
@@ -23,8 +27,18 @@ function App() {
         }>
           <Route index element={<Home />} />
           <Route path="/create" element={<Creategroup />} />
+           <Route path="/w" element={<HelpCenter />} />
+             <Route path="/acc" element={<AccountSettings />} />
           <Route path="/group/:id" element={<Group />} />
+            <Route path="/p" element={<PrivacyPolicy />}></Route>
+            
+
+
+               <Route path="/j" element={<JoinGroup />}></Route>
+         
         </Route>
+
+       
       </Routes>
     </AuthProvider>
   );
