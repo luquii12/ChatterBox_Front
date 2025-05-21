@@ -12,6 +12,7 @@ export default defineConfig({
     https: {
       key: fs.readFileSync("certificates/localhost.key"),
       cert: fs.readFileSync("certificates/localhost.crt"),
+      
     },
     port: 5173,
     // proxy: {

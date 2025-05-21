@@ -31,7 +31,7 @@ function App() {
              <Route path="/acc" element={<AccountSettings />} />
           <Route path="/group/:id" element={<Group />} />
             <Route path="/p" element={<PrivacyPolicy />}></Route>
-             <Route path="/e" element={<PrivacyPolicy />}></Route>
+            
 
 
                <Route path="/j" element={<JoinGroup />}></Route>

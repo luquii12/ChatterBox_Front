@@ -41,7 +41,7 @@ export default function JoinGroup() {
   };
 
   return (
-    <div className="min-h-screen background-primary flex items-center justify-center px-2 py-6">
+    <div className="min-h-screen background-primary flex items-center justify-center px-2 py-2">
       <div className="background-secondary border primary-color rounded-lg p-10 w-[1000px] text-white shadow-[0_1px_10px_rgba(0,0,0,0.05)] shadow-yellow-100">
 
         <div className="flex justify-center mb-6">
