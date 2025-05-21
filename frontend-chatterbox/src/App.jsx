@@ -6,7 +6,7 @@ import Sidebar from "./components/Sidebar";
 import Layout from "./layout/Layout";
 import Card from "./components/Card";
 import Home from "./layout/Home";
-import Creategroup from "./layout/CreateGroup";
+import CreateGroup from "./layout/CreateGroup";
 import { AuthProvider } from "./auth/AuthProvider";
 import RutaProtegida from "./auth/RutasProtegidas";
 import Group from "./layout/Group";
@@ -26,7 +26,7 @@ function App() {
           </RutaProtegida>
         }>
           <Route index element={<Home />} />
-          <Route path="/create" element={<Creategroup />} />
+          <Route path="/create" element={<CreateGroup />} />
            <Route path="/w" element={<HelpCenter />} />
              <Route path="/acc" element={<AccountSettings />} />
           <Route path="/group/:id" element={<Group />} />

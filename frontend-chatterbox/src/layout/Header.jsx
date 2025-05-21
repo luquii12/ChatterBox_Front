@@ -34,7 +34,7 @@ const Header = () => {
             className="flex items-center gap-2 cursor-pointery"
           >
             <div className="w-10 h-10 rounded-full border-2 border-yellow-300 flex items-center justify-center">
-              <span className="text-xl">👤</span>
+              <span className="text-xl">👤</span> {/*Cambiar por la img*/}
             </div>
             <span className="text-base text-yellow-200 font-medium truncate max-w-[100px]">
               {user.usuario.apodo}

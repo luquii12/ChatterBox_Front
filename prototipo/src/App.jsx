@@ -12,7 +12,7 @@ const App = () => {
       <h1>Aplicación de Chat</h1>
       {/* Pasa los props al ChatComponent */}
       {/* <ChatComponent chatId={chatId} usuarioId={usuarioId} /> */}
-      <PruebaImg/>
+      <PruebaImg usuarioId={usuarioId} />
     </div>
   );
 };
