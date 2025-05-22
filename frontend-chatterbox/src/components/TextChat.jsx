@@ -1,46 +1,102 @@
+import { useEffect, useState } from "react";
+import UserServices from "../services/UserServices";
+import { useAuth } from "../auth/AuthProvider";
 
+const TextChat = ({ contenido, hora, id_user }) => {
+  const { user: myUser } = useAuth();
+  const [user, setUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-const TextChat = () => {
-    return(
-        
-<div class="flex items-start gap-2.5">
-   <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Jese image"/>
-   <div class="flex flex-col gap-1 w-full max-w-[320px]">
-      <div class="flex items-center space-x-2 rtl:space-x-reverse">
-         <span class="text-sm font-semibold text-gray-900 dark:text-white">Bonnie Green</span>
-         <span class="text-sm font-normal text-gray-500 dark:text-gray-400">11:46</span>
+  useEffect(() => {
+    UserServices.getUserById(id_user)
+      .then((response) => setUser(response.data))
+      .catch((error) => console.error("Error fetching user:", error));
+  }, [id_user]);
+
+  const isOwnMessage = id_user === myUser.usuario.id_usuario;
+
+  return (
+    <div
+      className={`flex items-start gap-2.5 mb-4 ${
+        isOwnMessage ? "ml-auto flex-row-reverse" : ""
+      }`}
+    >
+      <img
+        className="w-10 h-10 rounded-full object-cover"
+        src="/docs/images/people/profile-picture-3.jpg"
+        alt="User avatar"
+      />
+
+      <div className="flex flex-col gap-1 w-full max-w-xs relative">
+        {/* Header: nombre y hora */}
+        <div
+          className={`flex items-center justify-between text-xs text-gray-500 dark:text-gray-300 ${
+            isOwnMessage ? "text-right" : "text-left"
+          }`}
+        >
+          <span className="font-semibold text-gray-800 dark:text-white">
+            {user?.apodo}
+          </span>
+          <span>{hora?.split(" ")[1]?.split(":").slice(0, 2).join(":")}</span>
+        </div>
+
+        {/* Bubble */}
+        <div
+          className={`relative p-3 rounded-xl text-sm shadow ${
+            isOwnMessage
+              ? "bg-indigo-500 text-white rounded-br-none"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-bl-none"
+          }`}
+        >
+          {contenido}
+        </div>
+
+        {/* Estado */}
+        <span className="text-xs text-gray-400 dark:text-gray-500">
+          Delivered
+        </span>
+
+        {/* Dropdown botón */}
+        <div className="absolute top-0 right-0">
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <svg
+              className="w-4 h-4 text-gray-500 dark:text-gray-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z" />
+            </svg>
+          </button>
+
+          {/* Dropdown menú */}
+          {showDropdown && (
+            <div className="absolute right-0 mt-2 w-40 z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
+              <ul className="text-sm text-gray-700 dark:text-gray-200">
+                {["Reply", "Forward", "Copy", "Report", "Delete"].map(
+                  (action) => (
+                    <li key={action}>
+                      <button
+                        onClick={() => {
+                          console.log(action);
+                          setShowDropdown(false);
+                        }}
+                        className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        {action}
+                      </button>
+                    </li>
+                  )
+                )}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
-      <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
-         <p class="text-sm font-normal text-gray-900 dark:text-white"> That's awesome. I think our users will really appreciate the improvements.</p>
-      </div>
-      <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Delivered</span>
-   </div>
-   <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" data-dropdown-placement="bottom-start" class="inline-flex self-center items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600" type="button">
-      <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-         <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
-      </svg>
-   </button>
-   <div id="dropdownDots" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700 dark:divide-gray-600">
-      <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reply</a>
-         </li>
-         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Forward</a>
-         </li>
-         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Copy</a>
-         </li>
-         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Report</a>
-         </li>
-         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
-         </li>
-      </ul>
-   </div>
-</div>
+    </div>
+  );
+};
 
-    )
-    }
-    export default TextChat;
+export default TextChat;

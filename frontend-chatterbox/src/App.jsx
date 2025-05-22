@@ -10,19 +10,35 @@ import Creategroup from "./layout/CreateGroup";
 import { AuthProvider } from "./auth/AuthProvider";
 import RutaProtegida from "./auth/RutasProtegidas";
 import Group from "./layout/Group";
+import Welcome from "./layout/Welcome";
+import HelpCenter from "./layout/HelpCenter";
+import AccountSettings from "./layout/AccountSettings";
+import PrivacyPolicy from "./layout/PrivacyPolicy";
+import JoinGroup from "./layout/JoinGroup";
+
+
 function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<LoginSignup />} />
-        <Route path="/" element={
-          <RutaProtegida>
-          <Layout />
-          </RutaProtegida>
-        }>
+                  <Route path="/group/:id" element={<Group />} />
+
+        <Route
+          path="/"
+          element={
+            <RutaProtegida>
+              <Layout />
+            </RutaProtegida>
+          }
+        >
           <Route index element={<Home />} />
           <Route path="/create" element={<Creategroup />} />
-          <Route path="/group/:id" element={<Group />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/help" element={<HelpCenter />} />
+          <Route path="/accountSettings" element={<AccountSettings />} />
+          <Route path="/privacy" element={<PrivacyPolicy/>} />
+          <Route path="/joinGroup" element={<JoinGroup/>} />
         </Route>
       </Routes>
     </AuthProvider>

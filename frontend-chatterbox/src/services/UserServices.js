@@ -13,6 +13,9 @@ class UserServices {
     static signUp(data) {
         return instance.post(`${API_URL}/register`, data)
     }
+    static getUserById(id) {
+        return instance.get(`/usuarios/${id}`)
+    }
 }
 
 export default UserServices;
