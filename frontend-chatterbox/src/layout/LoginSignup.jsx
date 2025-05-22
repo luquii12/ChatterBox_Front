@@ -1,14 +1,26 @@
 import React, { useState } from "react";
 import "../styles/LoginSingIn.css";
 import UserServices from "../services/UserServices";
+import { useAuth } from "../auth/AuthProvider";
+import { useNavigate } from "react-router";
+
 
 const LoginSignup = () => {
+  const {login}=useAuth()
+  const navigate = useNavigate();
+
   const [formLogIn, setFormLogIn] = useState({
     email: "",
     password: "",
   });
-  const [errorLogin, setErrorLogin] = useState({email: "", password: ""});
-  const [errorSignUp, setErrorSignUp] = useState({apodo: "", nombre_usuario: "", email: "", password: ""});
+  const [errorLogin, setErrorLogin] = useState({ email: "", password: "" });
+  const [errorSignUp, setErrorSignUp] = useState({
+    apodo: "",
+    nombre_usuario: "",
+    email: "",
+    password: "",
+  });
+
 
   const [formSignUp, setFormSignUp] = useState({
     apodo: "",
@@ -35,24 +47,26 @@ const LoginSignup = () => {
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    let errors={}
+    let errors = {};
     console.log("Login Data:", formLogIn);
     UserServices.logIn(formLogIn)
-    .then((response)=>{
-      console.log(response);
+      .then((response) => {
+        console.log(response.data);
+login(response.data)
+navigate("/")
 
-    }).catch((error)=>{
-      if(error.status === 404) {
-      errors.email = "Email not found";
-      }
-      if (error.status === 401) {
-        
-errors.password = "Invalid password";      
-      }   
-    
-    setErrorLogin(errors);
 
-    })
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          errors.email = "Email not found";
+        }
+        if (error.status === 401) {
+          errors.password = "Invalid password";
+        }
+
+        setErrorLogin(errors);
+      });
     // Aquí puedes agregar la lógica para enviar los datos de inicio de sesión al backend
   };
 
@@ -61,16 +75,18 @@ errors.password = "Invalid password";
     console.log("Sign Up Data:", formSignUp);
 
     UserServices.signUp(formSignUp)
-    .then((response)=>{
-      console.log(response);
-    }
-    ).catch((error)=>{
-      if(error.status === 400) {
-        errorSignUp.apodo = "Invalid name";
-      }
-      if (error.status === 409) {
-        errorSignUp.nombre_usuario = "Username already exists";
-      }})
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        if (error.status === 400) {
+          errorSignUp.apodo = "Invalid name";
+        }
+        if (error.status === 409) {
+          errorSignUp.nombre_usuario = "Username already exists";
+        }
+      });
+
     // Aquí puedes agregar la lógica para enviar los datos de registro al backend
   };
 
@@ -99,7 +115,9 @@ errors.password = "Invalid password";
                     <div className="card-front">
                       <div className="center-wrap">
                         <div className="section text-center">
-                          <h4 className="text-2xl font-bold mb-4 pb-3">Log In</h4>
+                          <h4 className="text-2xl font-bold mb-4 pb-3">
+                            Log In
+                          </h4>
                           <form onSubmit={handleLoginSubmit}>
                             <div className="form-group mb-4">
                               <input
@@ -113,8 +131,11 @@ errors.password = "Invalid password";
 
                               <i className="input-icon uil uil-at"></i>
                             </div>
-                            {errorLogin.email && 
-                              <p className="text-red-500 text-sm">{errorLogin.email}</p>}
+                            {errorLogin.email && (
+                              <p className="text-red-500 text-sm">
+                                {errorLogin.email}
+                              </p>
+                            )}
                             <div className="form-group mb-4 mt-2">
                               <input
                                 type="password"
@@ -126,8 +147,11 @@ errors.password = "Invalid password";
                               />
                               <i className="input-icon uil uil-lock-alt"></i>
                             </div>
-                            {errorLogin.password && 
-                              <p className="text-red-500 text-sm">{errorLogin.password}</p>}
+                            {errorLogin.password && (
+                              <p className="text-red-500 text-sm">
+                                {errorLogin.password}
+                              </p>
+                            )}
                             <button type="submit" className="btn mt-4">
                               Login
                             </button>
@@ -145,7 +169,9 @@ errors.password = "Invalid password";
                     <div className="card-back">
                       <div className="center-wrap">
                         <div className="section text-center">
-                          <h4 className="text-2xl font-bold mb-3 pb-3">Sign Up</h4>
+                          <h4 className="text-2xl font-bold mb-3 pb-3">
+                            Sign Up
+                          </h4>
                           <form onSubmit={handleSignUpSubmit}>
                             <div className="form-group mb-4">
                               <input

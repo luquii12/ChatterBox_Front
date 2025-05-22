@@ -13,6 +13,11 @@ class UserServices {
     static signUp(data) {
         return instance.post(`${API_URL}/register`, data)
     }
+
+
+     static creteGroup(data) {
+        return instance.post(`${API_URL}/grupo/crear`, data)
+    }
 }
 
 export default UserServices;
