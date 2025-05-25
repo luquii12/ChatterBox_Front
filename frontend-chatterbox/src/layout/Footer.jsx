@@ -1,5 +1,5 @@
 const Footer = () => (
-  <footer className="background-secondary text-gray-400 text-sm py-12 px-6">
+  <footer className="background-secondary text-gray-400 text-sm py-8 px-6">
    <div className="max-w-6xl mx-auto flex flex-col items-center text-center border-b border-[#FFEBA7] pb-6">
       <div className="w-full flex flex-col md:flex-row justify-center gap-16">
         
@@ -32,11 +32,9 @@ const Footer = () => (
 
     {/* Bottom copyright */}
     <div className="text-center text-xs text-white-500 mt-4">
-      Â© 2025 Chatterbox. All rights reserved.
-
+      © 2025 Chatterbox. All rights reserved.
     </div>
   </footer>
 );
 
 export default Footer;
-

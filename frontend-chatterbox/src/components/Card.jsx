@@ -1,10 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router";
 
-const Card = ({ title, description, image,id }) => {
+const Card = ({ title, description, image,id ,nav=true}) => {
     const navigate = useNavigate();
 
 const goGroup=(id)=>{
+  if(!nav) return;
+  
 navigate(`/group/${id}`);
 }
 

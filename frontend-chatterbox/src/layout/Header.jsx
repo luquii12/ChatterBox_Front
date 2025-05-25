@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuth } from "../auth/AuthProvider";
+import axios from "axios";
 
 const Header = () => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { user } = useAuth();
+  const [fotoPerfilUrl, setFotoPerfilUrl] = useState(null);
 
  
   useEffect(() => {
@@ -23,6 +25,27 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+    useEffect(() => {
+    if (!user) return;
+
+    axios
+      .get(
+        `https://localhost:8443/usuarios/${user.usuario.id_usuario}/foto-perfil`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+          responseType: "blob",
+        }
+      )
+      .then((res) => {
+        const url = URL.createObjectURL(res.data);
+        setFotoPerfilUrl(url);
+      })
+      .catch((err) => {
+        console.error("Error al obtener foto perfil:", err);
+        setFotoPerfilUrl(null);
+      });
+  }, [user]);
+
   return (
     <>
       <header className="flex justify-between items-center background-secondary text-white h-20 px-0 shadow-md relative">
@@ -33,10 +56,11 @@ const Header = () => {
             onClick={() => navigate("/")}
             className="flex items-center gap-2 cursor-pointery"
           >
-            <div className="w-10 h-10 rounded-full border-2 border-yellow-300 flex items-center justify-center">
-              <span className="text-xl">👤</span> {/*Cambiar por la img*/}
+            <div className="cursor-pointer w-10 h-10 rounded-full border-2 border-yellow-300 flex items-center justify-center">
+              <img src={fotoPerfilUrl} alt="" />
+              {/* <span className="text-xl">👤</span> */}
             </div>
-            <span className="text-base text-yellow-200 font-medium truncate max-w-[100px]">
+            <span className="cursor-pointer text-base text-yellow-200 font-medium truncate max-w-[100px]">
               {user.usuario.apodo}
             </span>
           </div>
@@ -53,7 +77,9 @@ const Header = () => {
 
         {/* Botones de la derecha */}
         <div className="flex items-center gap-4 pr-6 ">
-          <button className="background-terciary primary-color px-4 py-2 rounded hover:bg-white hover:text-black transition cursor-pointer">
+          <button onClick={()=>{
+            navigate("/joinGroup");
+          }} className="background-terciary primary-color px-4 py-2 rounded hover:bg-white hover:text-black transition cursor-pointer">
             JOIN GROUP
           </button>
           <button
@@ -119,7 +145,7 @@ const Header = () => {
               className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
               onClick={() => {
                 
-                navigate("/w"); //Hihcam perro ponle aqui donde quieres navegar 
+                navigate("/help"); //Hihcam perro ponle aqui donde quieres navegar 
                 setDropdownOpen(false);
               }}
             >
@@ -132,6 +158,8 @@ const Header = () => {
                
                 console.log("Cerrar sesión");
                 setDropdownOpen(false);
+                localStorage.removeItem("user");
+                navigate("/login");
               }}
             >
               🚪 Cerrar sesión

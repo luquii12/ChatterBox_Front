@@ -1,9 +1,10 @@
 // HelpCenter.jsx
 import { ShieldCheck, Settings, HelpCircle } from "lucide-react";
+import { Link } from "react-router";
 
 const HelpCenter = () => {
   return (
-    <div className="min-h-screen bg-[#12172a] text-white flex flex-col items-center px- pt-10 pb-10 py-25 space-y-26">
+    <div className="min-h-screen bg-[#12172a] text-white flex flex-col items-center px-6 py-20 space-y-20">
       <div className="text-center space-y-6">
         <h1 className="text-6xl font-bold text-yellow-200">Help Center</h1>
         <p className="text-4xl font-semibold text-white">Need help? Count on us.</p>
@@ -15,7 +16,9 @@ const HelpCenter = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-38">
         <Card icon={<Settings className="w-20 h-20" />} title="Count Settings" />
+        <Link to={"/privacy"}>
         <Card icon={<ShieldCheck className="w-20 h-20" />} title="Privacy Policy" />
+        </Link>
         <Card icon={<HelpCircle className="w-20 h-20" />} title="Questions" />
       </div>
     </div>

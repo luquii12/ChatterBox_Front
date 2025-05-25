@@ -13,10 +13,8 @@ class UserServices {
     static signUp(data) {
         return instance.post(`${API_URL}/register`, data)
     }
-
-
-     static creteGroup(data) {
-        return instance.post(`/grupos`, data)
+    static getUserById(id) {
+        return instance.get(`/usuarios/${id}`)
     }
 }
 

@@ -4,7 +4,6 @@ import UserServices from "../services/UserServices";
 import { useAuth } from "../auth/AuthProvider";
 import { useNavigate } from "react-router";
 
-
 const LoginSignup = () => {
   const {login}=useAuth()
   const navigate = useNavigate();
@@ -20,7 +19,6 @@ const LoginSignup = () => {
     email: "",
     password: "",
   });
-
 
   const [formSignUp, setFormSignUp] = useState({
     apodo: "",
@@ -55,7 +53,6 @@ const LoginSignup = () => {
 login(response.data)
 navigate("/")
 
-
       })
       .catch((error) => {
         if (error.status === 404) {
@@ -86,7 +83,6 @@ navigate("/")
           errorSignUp.nombre_usuario = "Username already exists";
         }
       });
-
     // Aquí puedes agregar la lógica para enviar los datos de registro al backend
   };
 
