@@ -1,13 +1,23 @@
 import React, { useState } from "react";
-import "../styles/LoginSingIn.css";
+import { useAuth } from "../auth/AuthProvider";
+import UserServices from "../services/UserServices";
+import { ImagePlus, Lock, FileText } from "lucide-react";
+import GroupServices from "../services/GroupServices";
 
-const Creategroup = () => {
+const CreateGroup = () => {
+  const { user } = useAuth();
+
   const [form, setForm] = useState({
+    id_usuario: user.usuario.id_usuario,
     name: "",
     image: null,
     isPrivate: false,
     description: "",
   });
+
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', null
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -18,114 +28,145 @@ const Creategroup = () => {
   };
 
   const handleImageUpload = (e) => {
-    setForm((prev) => ({
-      ...prev,
-      image: e.target.files[0],
-    }));
+    const file = e.target.files[0];
+    if (file) {
+      setForm((prev) => ({
+        ...prev,
+        image: file,
+      }));
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
 
-  const formData = new FormData();
-  formData.append("name", form.name);
-  formData.append("description", form.description);
-  formData.append("isPrivate", form.isPrivate);
-  if (form.image) {
-    formData.append("image", form.image);
-  }
+    const payload = {
+      id_usuario_creador: form.id_usuario,
+      nombre_grupo: form.name,
+      descripcion: form.description,
+      es_privado: form.isPrivate,
+      foto_grupo: null, // por ahora no se envÃ­a imagen
+    };
 
-  try {
-    const response = await fetch("/grupos", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error("Error creating group");
+    try {
+      const response = await GroupServices.creteGroup(payload)
+      console.log("Grupo creado:", response);
+      setSubmitStatus("success");
+      setForm({
+        id_usuario: user.usuario.id_usuario,
+        name: "",
+        image: null,
+        isPrivate: false,
+        description: "",
+      });
+      setImagePreview(null);
+    } catch (error) {
+      console.error("Error al crear grupo:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const result = await response.json();
-    console.log("Group created successfully:", result);
-    window.location.reload();
-  } catch (error) {
-    console.error("Failed to create group:", error);
-  }
-};
-
+  };
 
   return (
-    <div className="min-h-screen bg-[#0D1321] flex items-center justify-center p-6">
-      <div className="bg-[#1E1E2F] text-white p-8 rounded-lg border border-yellow-300 shadow-xl w-full max-w-md">
-        <h2 className="text-center text-3xl font-bold text-[#F5D67B] mb-8 tracking-wide">
-          Create Group
-        </h2>
+    <div className="min-h-screen background-primary flex items-center justify-center px-3 py-5">
+      <div className="background-secondary border primary-color rounded-lg p-10 w-[1000px] text-white shadow-[0_1px_10px_rgba(0,0,0,0.05)] shadow-yellow-100">
+        <h2 className="text-5xl primary-color font-semibold text-center mb-10">Create Group</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm mb-1">Group Name</label>
+
+          {/* Group Name */}
+          <div className="relative">
+            <label className="block mb-2 text-lg">Group Name</label>
+            <FileText className="absolute left-3 top-2/3 -translate-y-1/2 w-5 h-5 primary-color" />
             <input
               type="text"
               name="name"
-              className="w-full bg-[#2C2C3C] p-3 rounded-md outline-none focus:ring-2 focus:ring-yellow-400"
               placeholder="Enter group name"
               value={form.name}
               onChange={handleChange}
+              className="w-full px-10 py-3 rounded background-terciary border border-gray-600"
             />
           </div>
 
-          <div>
-            <label className="block text-sm mb-1">Group Image (optional)</label>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 flex items-center justify-center bg-[#0F1624] rounded border border-white text-lg">
-                ⬆️
-              </div>
-              <label className="bg-black text-white text-sm px-4 py-2 rounded hover:bg-gray-700 transition cursor-pointer">
-                <input type="file" className="hidden" onChange={handleImageUpload} />
-                Upload
-              </label>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm mb-1">Privacy</label>
-            <div className="flex items-center gap-3">
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="isPrivate"
-                  className="sr-only peer"
-                  checked={form.isPrivate}
-                  onChange={handleChange}
-                />
-                <div className="w-11 h-6 bg-gray-400 rounded-full peer peer-checked:bg-yellow-400 peer-focus:ring-2 peer-focus:ring-yellow-400 transition duration-300"></div>
-              </label>
-              <span className="text-sm">Private group</span>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm mb-1">Description (optional)</label>
+          {/* Image Upload */}
+          <div className="relative">
+            <label className="block mb-2 text-lg">Group Image (optional)</label>
+            <ImagePlus className="absolute left-3 top-2/3 -translate-y-1/2 w-5 h-5 primary-color" />
             <input
-              type="text"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="w-full px-10 py-3 rounded background-terciary border border-gray-600"
+            />
+            {imagePreview && (
+              <div className="mt-3">
+                <p className="text-sm text-gray-400">Image selected:</p>
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-24 h-24 mt-2 rounded object-cover border border-gray-600"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Privacy */}
+          <div className="flex items-center gap-3">
+            <Lock className="primary-color" />
+            <label className="text-lg">Private Group</label>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                name="isPrivate"
+                className="sr-only peer"
+                checked={form.isPrivate}
+                onChange={handleChange}
+              />
+              <div className="w-11 h-6 bg-gray-400 rounded-full peer peer-checked:bg-yellow-400 transition duration-300"></div>
+            </label>
+          </div>
+
+          {/* Description */}
+          <div className="relative">
+            <label className="block mb-2 text-lg">Description</label>
+            <textarea
               name="description"
-              className="w-full bg-[#2C2C3C] p-3 rounded-md outline-none focus:ring-2 focus:ring-yellow-400"
-              placeholder="Group description"
+              rows="3"
               value={form.description}
               onChange={handleChange}
+              placeholder="Group description"
+              className="w-full px-4 py-3 rounded background-terciary border border-gray-600"
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-[#2C2C3C] text-white font-semibold py-3 rounded hover:bg-yellow-400 hover:text-black transition"
-          >
-            Create Group
-          </button>
+          {/* Submit Button */}
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="cursor-pointer w-[400px] mt-4 border-1 text-white py-4 rounded hover:bg-[#FFEBA7] background-terciary disabled:opacity-50"
+              style={{ borderColor: '#FFEBA7' }}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Creating Group...' : 'Create Group'}
+            </button>
+          </div>
+
+          {/* Feedback Message */}
+          {submitStatus === "success" && (
+            <p className="text-green-400 text-center mt-4">Group created successfully!</p>
+          )}
+
+          {submitStatus === "error" && (
+            <p className="text-red-400 text-center mt-4">Something went wrong. Please try again.</p>
+          )}
         </form>
       </div>
     </div>
   );
 };
 
-export default Creategroup;
+export default CreateGroup;
