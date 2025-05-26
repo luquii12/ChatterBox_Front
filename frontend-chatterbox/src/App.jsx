@@ -15,6 +15,7 @@ import HelpCenter from "./layout/HelpCenter";
 import AccountSettings from "./layout/AccountSettings";
 import PrivacyPolicy from "./layout/PrivacyPolicy";
 import JoinGroup from "./layout/JoinGroup";
+import PublicGroups from "./components/PublicGroups";
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           <Route path="/accountSettings" element={<AccountSettings />} />
           <Route path="/privacy" element={<PrivacyPolicy/>} />
           <Route path="/joinGroup" element={<JoinGroup/>} />
+          <Route path="/publicGroups" element={<PublicGroups/>} />
         </Route>
       </Routes>
     </AuthProvider>

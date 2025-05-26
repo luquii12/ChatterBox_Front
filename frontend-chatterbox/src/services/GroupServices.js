@@ -20,6 +20,9 @@ class GroupServices {
     static joinGroup( id_grupo) {
         return instance.post(`/grupos/${id_grupo}/join`)
     }
+    static getpublic() {
+        return instance.get("/grupos")
+    }
  
 }
 

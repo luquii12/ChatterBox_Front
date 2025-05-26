@@ -134,6 +134,8 @@ const Header = () => {
                
                 console.log("Cerrar sesión");
                 setDropdownOpen(false);
+                localStorage.removeItem("user");
+                navigate("/login");
               }}
             >
               🚪 Cerrar sesión
