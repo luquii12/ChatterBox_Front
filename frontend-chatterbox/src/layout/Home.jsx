@@ -4,6 +4,8 @@ import GroupServices from "../services/GroupServices";
 import { useAuth } from "../auth/AuthProvider";
 import Welcome from "./Welcome";
 
+
+
 const Home = () => {
   const { user } = useAuth();
   const [groups, setGroups] = useState([]);

@@ -1,82 +1,18 @@
-import { useEffect, useState } from 'react';
-import supabase from './supabaseClient';  // Asegúrate de tener configurado tu cliente Supabase
-import "./index.css"
+import React from "react";
+import ChatComponent from "./ChatComponent"; // Importa el componente de chat
 
-/**
- * The `App` function in JavaScript React sets up a real-time chat application where users can send and
- * receive messages, with the ability to change their username dynamically.
- * @returns The `App` component is being returned, which contains a real-time chat interface where
- * users can send and receive messages. The component includes a chat box displaying messages, an input
- * field to type and send messages, and an input field with a button to change the current user's name.
- * The messages are fetched initially and new messages are received in real-time using Supabase.
- */
-function App() {
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
-  const [userName, setUserName] = useState("User1");
-  const [newUser,setNewUser]=useState("")
-
-  useEffect(() => {
-    // Cargar mensajes iniciales
-    const fetchMessages = async () => {
-      let { data } = await supabase.from("messages").select("*").order("created_at", { ascending: true });
-      setMessages(data);
-    };
-    fetchMessages();
-
-    // Escuchar nuevos mensajes en tiempo real
-    const subscription = supabase
-      .channel("realtime-messages")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => {
-        setMessages((prev) => [...prev, payload.new]);
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(subscription);
-    };
-  }, []);
-
-  const sendMessage = async () => {
-    if (message.trim() === "") return;
-    await supabase.from("messages").insert([{ content: message, user_name: userName }]);
-    setMessage("");
-  };
+const App = () => {
+  // Aquí defines manualmente el chatId, usuarioId y token para probar
+  const chatId = 1; // Este sería el ID del chat en el que estás
+  const usuarioId = 1; // Este es el ID del usuario que está logueado
 
   return (
-    <div className="chat-container">
-    <h2 className="title">Chat en Tiempo Real</h2>
-    <div className="chat-box">
-      {messages.map((msg) => {
-        const isMyMessage = msg.user_name === userName;
-        return (
-          <div key={msg.id} className={`message-container ${isMyMessage ? "my-message" : "other-message"}`}>
-            <p className="message">
-              <strong>{msg.user_name}: </strong> {msg.content}
-            </p>
-          </div>
-        );
-      })}
+    <div>
+      <h1>Aplicación de Chat</h1>
+      {/* Pasa los props al ChatComponent */}
+      <ChatComponent chatId={chatId} usuarioId={usuarioId} />
     </div>
-    <div className="input-container">
-      <input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Escribe un mensaje..."
-        className="input"
-      />
-      <button onClick={sendMessage} className="button">Enviar</button>
-    </div>
-    <input
-        value={newUser}
-        onChange={(e) => setNewUser(e.target.value)}
-        placeholder="Cambiar usuario"
-        className="input"
-      />    <button onClick={()=>{setUserName(newUser)}} className="button">Cambiar Usuario</button>
-
-  </div>
-);
-}
-
+  );
+};
 
 export default App;
