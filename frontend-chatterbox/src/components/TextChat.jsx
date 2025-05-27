@@ -1,11 +1,24 @@
 import { useEffect, useState } from "react";
 import UserServices from "../services/UserServices";
 import { useAuth } from "../auth/AuthProvider";
+import Linkify from "react-linkify";
 
 const TextChat = ({ contenido, hora, id_user }) => {
   const { user: myUser } = useAuth();
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const decorateLink = (href, text, key) => (
+    <a
+      href={href}
+      key={key}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-500 underline hover:text-blue-700 break-words"
+    >
+      {text}
+    </a>
+  );
 
   useEffect(() => {
     UserServices.getUserById(id_user)
@@ -27,43 +40,43 @@ const TextChat = ({ contenido, hora, id_user }) => {
         alt="User avatar"
       />
 
-      <div className="flex flex-col gap-1 w-full max-w-xs relative">
+      <div className="flex flex-col gap-1 w-fit max-w-[60%] relative">
         {/* Header: nombre y hora */}
         <div
-          className={`flex items-center justify-between text-xs text-gray-500 dark:text-gray-300 ${
+          className={`flex items-center justify-between text-xs ${
             isOwnMessage ? "text-right" : "text-left"
           }`}
         >
-          <span className="font-semibold text-gray-800 dark:text-white">
-            {user?.apodo}
+          <span className="font-semibold">{user?.apodo}</span>
+          <span className="text-gray-400">
+            {hora?.split(" ")[1]?.split(":").slice(0, 2).join(":")}
           </span>
-          <span>{hora?.split(" ")[1]?.split(":").slice(0, 2).join(":")}</span>
         </div>
 
         {/* Bubble */}
         <div
-          className={`relative p-3 rounded-xl text-sm shadow ${
+          className={`relative p-3 rounded-xl text-sm shadow break-words whitespace-pre-wrap ${
             isOwnMessage
-              ? "bg-indigo-500 text-white rounded-br-none"
-              : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-bl-none"
+              ? "bg-gray-700 text-white rounded-br-none"
+              : "bg-gray-600 text-white rounded-bl-none"
           }`}
         >
-          {contenido}
+          <Linkify componentDecorator={decorateLink}>
+            {contenido}
+          </Linkify>
         </div>
 
         {/* Estado */}
-        <span className="text-xs text-gray-400 dark:text-gray-500">
-          Delivered
-        </span>
+        <span className="text-xs text-gray-400">Delivered</span>
 
         {/* Dropdown botón */}
         <div className="absolute top-0 right-0">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="p-1 rounded-full hover:bg-gray-700"
           >
             <svg
-              className="w-4 h-4 text-gray-500 dark:text-gray-400"
+              className="w-4 h-4 text-gray-400"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -73,8 +86,8 @@ const TextChat = ({ contenido, hora, id_user }) => {
 
           {/* Dropdown menú */}
           {showDropdown && (
-            <div className="absolute right-0 mt-2 w-40 z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
-              <ul className="text-sm text-gray-700 dark:text-gray-200">
+            <div className="absolute right-0 mt-2 w-40 z-50 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+              <ul className="text-sm">
                 {["Reply", "Forward", "Copy", "Report", "Delete"].map(
                   (action) => (
                     <li key={action}>
@@ -83,7 +96,7 @@ const TextChat = ({ contenido, hora, id_user }) => {
                           console.log(action);
                           setShowDropdown(false);
                         }}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="w-full text-left px-4 py-2 hover:text-blue-400"
                       >
                         {action}
                       </button>

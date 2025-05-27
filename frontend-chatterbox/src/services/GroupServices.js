@@ -14,7 +14,7 @@ class GroupServices {
     static getChatsFromGroup(id) {
         return instance.get(`/grupos/${id}/chats`)
     }
-    static creteGroup(data) {
+    static createGroup(data) {
         return instance.post("/grupos", data)
     }
     static joinGroup( id_grupo) {
@@ -23,6 +23,9 @@ class GroupServices {
     static getpublic() {
         return instance.get("/grupos")
     }
+    static createChat(data) {
+    return instance.post("/chats", data);
+  }
  
 }
 

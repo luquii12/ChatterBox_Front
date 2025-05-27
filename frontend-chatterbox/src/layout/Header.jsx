@@ -114,17 +114,27 @@ const Header = () => {
               className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
               onClick={() => {
                 
-                navigate("/"); //Hihcam perro ponle aqui donde quieres navegar 
+                navigate("/"); 
                 setDropdownOpen(false);
               }}
             >
               👥 Groups
             </li>
+             <li
+              className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
+              onClick={() => {
+                
+                navigate("/publicGroups"); 
+                setDropdownOpen(false);
+              }}
+            >
+              🌐 Public Groups
+            </li>
             <li
               className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
               onClick={() => {
                 
-                navigate("/"); //Hihcam perro ponle aqui donde quieres navegar 
+                navigate("/"); 
                 setDropdownOpen(false);
               }}
             >
@@ -134,7 +144,7 @@ const Header = () => {
               className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
               onClick={() => {
                 
-                navigate("/acc"); //Hihcam perro ponle aqui donde quieres navegar 
+                navigate("/accountSettings"); 
                 setDropdownOpen(false);
               }}
             >

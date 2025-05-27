@@ -16,6 +16,7 @@ import AccountSettings from "./layout/AccountSettings";
 import PrivacyPolicy from "./layout/PrivacyPolicy";
 import JoinGroup from "./layout/JoinGroup";
 import PublicGroups from "./components/PublicGroups";
+import ModifyGroup from "./layout/GroupSettings";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/joinGroup" element={<JoinGroup />} />
           <Route path="/publicGroups" element={<PublicGroups />} />
+          <Route path="/GroupSettings" element={<ModifyGroup />} />
         </Route>
       </Routes>
     </AuthProvider>

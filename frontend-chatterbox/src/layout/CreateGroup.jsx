@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
-import UserServices from "../services/UserServices";
 import { ImagePlus, Lock, FileText } from "lucide-react";
 import GroupServices from "../services/GroupServices";
 
@@ -17,7 +16,7 @@ const CreateGroup = () => {
 
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', null
+  const [submitStatus, setSubmitStatus] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -43,16 +42,18 @@ const CreateGroup = () => {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    const payload = {
-      id_usuario_creador: form.id_usuario,
-      nombre_grupo: form.name,
-      descripcion: form.description,
-      es_privado: form.isPrivate,
-      foto_grupo: null, // por ahora no se envÃ­a imagen
-    };
+  const formData = new FormData();
+formData.append("id_usuario_creador", form.id_usuario);
+formData.append("nombre_grupo", form.name);
+formData.append("descripcion", form.description);
+formData.append("es_privado", form.isPrivate);
+if (form.image) {
+  formData.append("foto_grupo", form.image);
+}
+
 
     try {
-      const response = await GroupServices.creteGroup(payload)
+      const response = await GroupServices.createGroup(formData);
       console.log("Grupo creado:", response);
       setSubmitStatus("success");
       setForm({
