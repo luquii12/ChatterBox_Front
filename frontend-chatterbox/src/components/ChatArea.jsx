@@ -11,9 +11,9 @@ const ChatArea = ({ selectedChat }) => {
   const [token, setToken] = useState(null);
   const scrollRef = useRef(null);
 
-  const usuarioId = JSON.parse(localStorage.getItem("user"))?.usuario?.id_usuario;
+  const usuarioId = JSON.parse(localStorage.getItem("user"))?.usuario
+    ?.id_usuario;
 
-  // Obtener token
   useEffect(() => {
     const storedToken = JSON.parse(localStorage.getItem("user"));
     if (storedToken) {
@@ -23,7 +23,6 @@ const ChatArea = ({ selectedChat }) => {
     }
   }, []);
 
-  // Cargar historial
   useEffect(() => {
     if (!selectedChat) return;
 
@@ -33,7 +32,6 @@ const ChatArea = ({ selectedChat }) => {
       .catch((err) => console.error("Error al cargar mensajes:", err));
   }, [selectedChat]);
 
-  // Conexión WebSocket
   useEffect(() => {
     if (!selectedChat || !token) return;
 
@@ -71,7 +69,6 @@ const ChatArea = ({ selectedChat }) => {
     };
   }, [selectedChat, token]);
 
-  // Enviar mensaje
   const enviarMensaje = () => {
     if (!contenido.trim()) {
       console.warn("Mensaje vacío");
@@ -93,34 +90,32 @@ const ChatArea = ({ selectedChat }) => {
     setContenido("");
   };
 
-  // Auto-scroll
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // Sin chat seleccionado
   if (!selectedChat) {
     return (
       <div className="flex-1 relative">
-        <div className="h-[calc(100vh-144px)] flex items-center justify-center">
-          <p className="text-gray-500">Select a chat to start messaging</p>
+        <div className="h-[calc(120vh-144px)] flex items-center justify-center">
+          <p className="secondary-color">Select a chat to start messaging</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 relative">
-      <header className="bg-white p-4 text-gray-700 border-b border-gray-300">
-        <h1 className="text-2xl font-semibold">{selectedChat.nombre_chat}</h1>
+    <div className="flex-1 relative m-0 p-0">
+      <header className="bg-gray-800 px-4 py-5 m-0">
+        <h1 className="text-2xl font-semibold secondary-color m-0">
+          {selectedChat.nombre_chat}
+        </h1>
       </header>
-
-      {/* Chat Messages */}
       <div
         ref={scrollRef}
-        className="h-[calc(100vh-144px)] overflow-y-auto p-4 pb-36"
+        className="h-[calc(100vh-96px)] overflow-y-auto px-4 py-2 bg-gray-900 m-0"
       >
         {messages.map((message, index) => (
           <TextChat
@@ -131,26 +126,30 @@ const ChatArea = ({ selectedChat }) => {
           />
         ))}
       </div>
-
-      {/* Chat Input */}
-      <footer className="bg-white border-t border-gray-300 p-4 absolute bottom-0 w-full">
-        <div className="flex items-center">
-          <input
-            type="text"
+      <footer className="bg-gray-800 px-4 py-4 absolute bottom-0 w-full m-0">
+        <div className="flex items-center m-0">
+          <textarea
+            rows={1}
+            style={{ resize: "none" }}
             placeholder="Type a message..."
-            className="w-full p-3 rounded-2xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-gray-50 text-gray-700 placeholder-gray-400"
+            className="w-full max-h-32 min-h-[48px] p-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 secondary-color placeholder-secondary-color overflow-auto"
             value={contenido}
             onChange={(e) => setContenido(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && enviarMensaje()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                enviarMensaje();
+              }
+            }}
           />
           <button
             onClick={enviarMensaje}
             disabled={!socket || socket.readyState !== WebSocket.OPEN}
-            className={`${
+            className={`ml-2 px-4 py-4 rounded-2xl text-white transition-colors duration-200 ${
               conectado
-                ? "bg-indigo-500 hover:bg-indigo-600"
+                ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-gray-300 cursor-not-allowed"
-            } text-white px-4 py-2 rounded-2xl ml-2 transition-colors duration-200`}
+            }`}
           >
             Send
           </button>

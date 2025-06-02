@@ -19,7 +19,9 @@ const HelpCenter = () => {
         <Link to={"/privacy"}>
         <Card icon={<ShieldCheck className="w-20 h-20" />} title="Privacy Policy" />
         </Link>
+        <Link to={"/questions"}>
         <Card icon={<HelpCircle className="w-20 h-20" />} title="Questions" />
+      </Link>
       </div>
     </div>
   );

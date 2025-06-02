@@ -1,21 +1,42 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router";
 import GroupServices from "../services/GroupServices";
 import SidebarElement from "./SidebarElement";
 import ChatArea from "./ChatArea";
-import { Menu } from "lucide-react"; // Usa ícono hamburguesa
+import { Menu } from "lucide-react";
+import { AuthProvider, useAuth } from "../auth/AuthProvider";
 
 const Sidebar = () => {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const [isAdmin, setIsAdmin] = useState(false); // Estado para verificar si el usuario es admin
+  const { user } = useAuth(); // Obtiene el usuario del contexto de autenticación
+  const { id } = useParams(); // Obtiene el ID del grupo desde los parámetros de la URL
   const changeChat = (chat) => {
     setSelectedChat(chats.find((c) => c.id_chat === chat));
     setSidebarOpen(false); // Cierra el sidebar en móvil al seleccionar un chat
   };
+  const [nuevoChatNombre, setNuevoChatNombre] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [chatToDelete, setChatToDelete] = useState(null);
 
-  const { id } = useParams();
+  const crearChat = () => {
+    if (!nuevoChatNombre.trim()) return;
+
+    GroupServices.createChat({
+      id_grupo: parseInt(id),
+      nombre_chat: nuevoChatNombre.trim(),
+    });
+    window.location.reload(); // Recargar la página para reflejar el nuevo chat
+
+    const nuevoChat = {
+      id_chat: Date.now(), // id temporal único
+      nombre_chat: nuevoChatNombre.trim(),
+    };
+    setChats([...chats, nuevoChat]);
+    setNuevoChatNombre("");
+  };
 
   useEffect(() => {
     GroupServices.getChatsFromGroup(id)
@@ -25,10 +46,23 @@ const Sidebar = () => {
       .catch((error) => {
         console.error("Error fetching groups:", error);
       });
+    GroupServices.getAllGroups(user.usuario.id_usuario)
+      .then((response) => {
+        const userGroups = response.data.filter(
+          (group) => group.id_grupo === parseInt(id)
+        );
+
+        if (userGroups.length > 0) {
+          setIsAdmin(userGroups[0].es_admin_grupo);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user groups:", error);
+      });
   }, [id]);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen m-0 p-0 ">
       {/* Mobile Menu Toggle */}
       <button
         className="md:hidden absolute top-4 left-4 z-50 bg-white p-2 rounded-md shadow"
@@ -40,12 +74,12 @@ const Sidebar = () => {
       {/* Sidebar */}
       <aside
         id="logo-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-full bg-gray-50 dark:bg-gray-800 transition-transform transform md:translate-x-0 ${
+        className={`p-3 fixed top-0 left-0 z-40 w-64 h-full bg-gray-50 dark:bg-gray-800 transition-transform transform md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:relative md:flex-shrink-0`}
+        } md:relative md:flex-shrink-0 m-0 p-0`}
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto">
+        <div className="h-full px-0 py-0 overflow-y-auto m-0">
           <Link to={"/"} className="flex items-center ps-2.5 mb-5">
             <img
               src="https://flowbite.com/docs/images/logo.svg"
@@ -56,18 +90,108 @@ const Sidebar = () => {
               ChaterrBox
             </span>
           </Link>
-          <ul className="space-y-2 font-medium">
+          <ul className="cursor-pointer space-y-2 font-medium m-0 p-0">
             {chats.map((chat) => (
-              <SidebarElement
+              <li
                 key={chat.id_chat}
-                id={chat.id_chat}
-                name={chat.nombre_chat}
-                changeChat={changeChat}
-              />
+                className="group flex items-center justify-between m-0 p-0"
+              >
+                <div
+                  className="flex-1 flex items-center px-3 py-1 rounded-md cursor-pointer transition group-hover:bg-gray-200 dark:group-hover:bg-gray-700"
+                  onClick={() => changeChat(chat.id_chat)}
+                >
+                  <SidebarElement
+                    id={chat.id_chat}
+                    name={chat.nombre_chat}
+                    changeChat={changeChat}
+                  />
+                </div>
+                {isAdmin && (
+                  <button
+                    onClick={() => {
+                      setChatToDelete(chat);
+                      setShowDeleteModal(true);
+                    }}
+                    className="cursor-pointer ml-2 text-red-500 opacity-0 group-hover:opacity-100 transition hover:bg-red-200 rounded"
+                    title="Eliminar chat"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </li>
             ))}
+
+            {isAdmin && (
+              <li className="mt-4 m-0 p-0">
+                <input
+                  type="text"
+                  value={nuevoChatNombre}
+                  onChange={(e) => setNuevoChatNombre(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      crearChat();
+                    }
+                  }}
+                  maxLength={13}
+                  placeholder="+ Añadir chat"
+                  className="w-full p-2 rounded-lg border border-background-secondary background-terciary secondary-color focus:outline-none focus:ring-2 focus:ring-highlight-text m-0"
+                />
+              </li>
+            )}
           </ul>
         </div>
       </aside>
+
+      {/* Modal for delete confirmation */}
+      {showDeleteModal && (
+        <div
+          className="cursor-pointer fixed inset-0 z-50 flex items-center justify-center"
+          style={{ backgroundColor: "rgba(179, 166, 92, 0.05)" }}
+        >
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-sm text-center border border-gray-200 dark:border-gray-700">
+            <h2 className="primary-color text-xl font-bold mb-3 text-gray-800 dark:text-gray-100">
+              Eliminar Chat
+            </h2>
+            <p className="text-base text-gray-600 dark:text-gray-300 mb-6">
+              ¿Estás seguro de que deseas eliminar este chat? Esta acción no se
+              puede deshacer.
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => {
+                  setChats(
+                    chats.filter((c) => c.id_chat !== chatToDelete.id_chat)
+                  );
+                  GroupServices.deleteChat(chatToDelete.id_chat);
+                  setShowDeleteModal(false);
+                }}
+                className="cursor-pointer px-5 py-2 rounded-lg font-semibold text-white bg-red-600 shadow hover:bg-red-700 transition"
+              >
+                Eliminar
+              </button>
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="cursor-pointer px-5 py-2 rounded-lg font-semibold text-gray-800 dark:text-gray-100 bg-gray-200 dark:bg-gray-700 shadow hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Overlay (only on mobile) */}
       {sidebarOpen && (
@@ -78,8 +202,8 @@ const Sidebar = () => {
       )}
 
       {/* Main content */}
-      <main className="flex-1 p-4 overflow-hidden">
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 h-full">
+      <main className="flex-1 p-2 overflow-hidden">
+        <div className="p-2 h-full m-0 rounded-lg dark:border-gray-700">
           <ChatArea selectedChat={selectedChat} />
         </div>
       </main>

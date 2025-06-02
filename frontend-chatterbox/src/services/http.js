@@ -13,6 +13,13 @@ const instance = axios.create({
 
     },
 });
+export const multipartInstance = axios.create({
+  baseURL: "https://localhost:8443",
+  headers: {
+    Authorization: `Bearer ${user?.token??""}`,
+  },
+});
+
 
 instance.interceptors.request.use(
   (config) => {

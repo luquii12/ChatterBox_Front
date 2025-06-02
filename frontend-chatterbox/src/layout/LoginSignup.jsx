@@ -4,23 +4,15 @@ import UserServices from "../services/UserServices";
 import { useAuth } from "../auth/AuthProvider";
 import { useNavigate } from "react-router";
 
-
 const LoginSignup = () => {
-  const {login}=useAuth()
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [formLogIn, setFormLogIn] = useState({
     email: "",
     password: "",
   });
-  const [errorLogin, setErrorLogin] = useState({ email: "", password: "" });
-  const [errorSignUp, setErrorSignUp] = useState({
-    apodo: "",
-    nombre_usuario: "",
-    email: "",
-    password: "",
-  });
-
+  const [errorLogin, setErrorLogin] = useState({ email: "", password: "", general: "" });
 
   const [formSignUp, setFormSignUp] = useState({
     apodo: "",
@@ -28,6 +20,32 @@ const LoginSignup = () => {
     email: "",
     password: "",
   });
+  const [errorSignUp, setErrorSignUp] = useState({
+    apodo: "",
+    nombre_usuario: "",
+    email: "",
+    password: "",
+    general: ""
+  });
+  const [successSignUp, setSuccessSignUp] = useState(""); // Nuevo estado para mensaje de éxito
+
+  // Validación para login
+  const validateLogin = () => {
+    const errors = {};
+    if (!formLogIn.email.trim()) errors.email = "El email es obligatorio";
+    if (!formLogIn.password.trim()) errors.password = "La contraseña es obligatoria";
+    return errors;
+  };
+
+  // Validación para registro
+  const validateSignUp = () => {
+    const errors = {};
+    if (!formSignUp.apodo.trim()) errors.apodo = "El nombre es obligatorio";
+    if (!formSignUp.nombre_usuario.trim()) errors.nombre_usuario = "El usuario es obligatorio";
+    if (!formSignUp.email.trim()) errors.email = "El email es obligatorio";
+    if (!formSignUp.password.trim()) errors.password = "La contraseña es obligatoria";
+    return errors;
+  };
 
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
@@ -35,6 +53,7 @@ const LoginSignup = () => {
       ...prevState,
       [name]: value,
     }));
+    setErrorLogin((prev) => ({ ...prev, [name]: "", general: "" }));
   };
 
   const handleSignUpChange = (e) => {
@@ -43,51 +62,71 @@ const LoginSignup = () => {
       ...prevState,
       [name]: value,
     }));
+    setErrorSignUp((prev) => ({ ...prev, [name]: "", general: "" }));
   };
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    let errors = {};
-    console.log("Login Data:", formLogIn);
+    const errors = validateLogin();
+    if (Object.keys(errors).length > 0) {
+      setErrorLogin(errors);
+      return;
+    }
     UserServices.logIn(formLogIn)
       .then((response) => {
-        console.log(response.data);
-login(response.data)
-navigate("/")
-
-
+        login(response.data);
+        navigate("/");
       })
       .catch((error) => {
+        let errors = {};
         if (error.status === 404) {
-          errors.email = "Email not found";
+          errors.email = "Email no encontrado";
+        } else if (error.status === 401) {
+          errors.password = "Contraseña incorrecta";
+        } else if (error.response && error.response.data && error.response.data.message) {
+          errors.general = error.response.data.message;
+        } else {
+          errors.general = "Error al iniciar sesión";
         }
-        if (error.status === 401) {
-          errors.password = "Invalid password";
-        }
-
         setErrorLogin(errors);
       });
-    // Aquí puedes agregar la lógica para enviar los datos de inicio de sesión al backend
   };
 
   const handleSignUpSubmit = (e) => {
     e.preventDefault();
-    console.log("Sign Up Data:", formSignUp);
-
+    const errors = validateSignUp();
+    if (Object.keys(errors).length > 0) {
+      setErrorSignUp(errors);
+      return;
+    }
     UserServices.signUp(formSignUp)
       .then((response) => {
-        console.log(response);
+        setFormSignUp({
+          apodo: "",
+          nombre_usuario: "",
+          email: "",
+          password: "",
+        });
+        setErrorSignUp({});
+        setSuccessSignUp("¡Registro correcto! Redirigiendo al login...");
+        setTimeout(() => {
+          setSuccessSignUp("");
+          document.getElementById("reg-log").checked = false;
+        }, 1500); // Espera 1.5 segundos antes de pasar al login
       })
       .catch((error) => {
+        let errors = {};
         if (error.status === 400) {
-          errorSignUp.apodo = "Invalid name";
+          errors.general = "Datos inválidos";
+        } else if (error.status === 409) {
+          errors.nombre_usuario = "El usuario ya existe";
+        } else if (error.response && error.response.data && error.response.data.message) {
+          errors.general = error.response.data.message;
+        } else {
+          errors.general = "Error al registrar";
         }
-        if (error.status === 409) {
-          errorSignUp.nombre_usuario = "Username already exists";
-        }
+        setErrorSignUp(errors);
       });
-
-    // Aquí puedes agregar la lógica para enviar los datos de registro al backend
   };
 
   return (
@@ -152,6 +191,11 @@ navigate("/")
                                 {errorLogin.password}
                               </p>
                             )}
+                            {errorLogin.general && (
+                              <p className="text-red-500 text-sm">
+                                {errorLogin.general}
+                              </p>
+                            )}
                             <button type="submit" className="btn mt-4">
                               Login
                             </button>
@@ -184,17 +228,27 @@ navigate("/")
                               />
                               <i className="input-icon uil uil-user"></i>
                             </div>
+                            {errorSignUp.apodo && (
+                              <p className="text-red-500 text-sm">
+                                {errorSignUp.apodo}
+                              </p>
+                            )}
                             <div className="form-group mb-4 mt-2">
                               <input
-                                type="tel"
+                                type="text"
                                 name="nombre_usuario"
                                 className="form-style"
-                                placeholder="Phone Number"
+                                placeholder="Username"
                                 value={formSignUp.nombre_usuario}
                                 onChange={handleSignUpChange}
                               />
-                              <i className="input-icon uil uil-phone"></i>
+                              <i className="input-icon uil uil-user"></i>
                             </div>
+                            {errorSignUp.nombre_usuario && (
+                              <p className="text-red-500 text-sm">
+                                {errorSignUp.nombre_usuario}
+                              </p>
+                            )}
                             <div className="form-group mb-4 mt-2">
                               <input
                                 type="email"
@@ -206,6 +260,11 @@ navigate("/")
                               />
                               <i className="input-icon uil uil-at"></i>
                             </div>
+                            {errorSignUp.email && (
+                              <p className="text-red-500 text-sm">
+                                {errorSignUp.email}
+                              </p>
+                            )}
                             <div className="form-group mb-4 mt-2">
                               <input
                                 type="password"
@@ -217,6 +276,19 @@ navigate("/")
                               />
                               <i className="input-icon uil uil-lock-alt"></i>
                             </div>
+                            {errorSignUp.password && (
+                              <p className="text-red-500 text-sm">
+                                {errorSignUp.password}
+                              </p>
+                            )}
+                            {errorSignUp.general && (
+                              <p className="text-red-500 text-sm">
+                                {errorSignUp.general}
+                              </p>
+                            )}
+                            {successSignUp && (
+                              <div className="mb-2 text-green-500 text-sm">{successSignUp}</div>
+                            )}
                             <button type="submit" className="btn mt-4">
                               Register
                             </button>

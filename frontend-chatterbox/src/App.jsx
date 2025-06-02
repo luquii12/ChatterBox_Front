@@ -16,14 +16,14 @@ import AccountSettings from "./layout/AccountSettings";
 import PrivacyPolicy from "./layout/PrivacyPolicy";
 import JoinGroup from "./layout/JoinGroup";
 import PublicGroups from "./components/PublicGroups";
-
+import NotFound from "./pages/NotFound";
+import Questions from "./pages/Questions";
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<LoginSignup />} />
-                  <Route path="/group/:id" element={<Group />} />
 
         <Route
           path="/"
@@ -38,14 +38,17 @@ function App() {
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/help" element={<HelpCenter />} />
           <Route path="/accountSettings" element={<AccountSettings />} />
-          <Route path="/privacy" element={<PrivacyPolicy/>} />
-          <Route path="/joinGroup" element={<JoinGroup/>} />
-          <Route path="/publicGroups" element={<PublicGroups/>} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/joinGroup" element={<JoinGroup />} />
+          <Route path="/publicGroups" element={<PublicGroups />} />
+          <Route path="/group/:id" element={<Group />} />
+          <Route path="questions" element={<Questions/>}/>
+
         </Route>
+        <Route path="*" element={<NotFound/>} />
       </Routes>
     </AuthProvider>
   );
-
 }
 
 export default App;

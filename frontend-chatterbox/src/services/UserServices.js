@@ -16,6 +16,11 @@ class UserServices {
     static getUserById(id) {
         return instance.get(`/usuarios/${id}`)
     }
+    static getUserPicture(id) {
+        return instance.get(`/usuarios/${id}/foto-perfil`,{
+            responseType: 'blob' // Para manejar imágenes
+        });
+    }
 }
 
 export default UserServices;

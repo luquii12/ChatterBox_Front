@@ -1,6 +1,6 @@
 import instance from './http';
 
-
+import { multipartInstance } from './http';
 
 
 const API_URL = "/usuarios"
@@ -14,8 +14,8 @@ class GroupServices {
     static getChatsFromGroup(id) {
         return instance.get(`/grupos/${id}/chats`)
     }
-    static creteGroup(data) {
-        return instance.post("/grupos", data)
+    static createGroup(data) {
+        return multipartInstance.post("/grupos", data)
     }
     static joinGroup( id_grupo) {
         return instance.post(`/grupos/${id_grupo}/join`)
@@ -23,7 +23,23 @@ class GroupServices {
     static getpublic() {
         return instance.get("/grupos")
     }
- 
+    static getImagenGrupo(id) {
+        return instance.get(`/grupos/${id}/foto`, {
+            responseType: 'blob' // Para manejar imágenes
+        });
+    }
+    static createChat(data) {
+        return instance.post("/chats", data)
+    }
+    static leaveGroup(id_grupo) {
+        return instance.delete(`/grupos/${id_grupo}/leave`)
+    }
+    static getGroupById(id) {
+        return instance.get(`/grupos/${id}`)
+    }
+    static deleteChat(id_chat) {
+        return instance.delete(`/chats/${id_chat}`)
+    }
 }
 
 export default GroupServices;
