@@ -37,10 +37,36 @@ const Sidebar = () => {
     setChats([...chats, nuevoChat]);
     setNuevoChatNombre("");
   };
+  const [groupInfo, setGroupInfo] = useState(null);
+
+  useEffect(() => {
+    GroupServices.getGroupById(id)
+      .then((res) => setGroupInfo(res.data))
+      .catch(() => setGroupInfo(null));
+    GroupServices.getImagenGrupo(id)
+      .then((response) => {
+        console.log(id);
+
+        const imageUrl = URL.createObjectURL(response.data);
+        setGroupInfo((prev) => ({
+          ...prev,
+          foto_grupo: imageUrl,
+        }));
+      })
+      .catch((error) => {
+        console.error("Error fetching group image:", error);
+        setGroupInfo((prev) => ({
+          ...prev,
+          foto_grupo: "https://via.placeholder.com/150", // Placeholder image
+        }));
+      });
+  }, []);
 
   useEffect(() => {
     GroupServices.getChatsFromGroup(id)
       .then((response) => {
+        console.log(response.data);
+
         setChats(response.data);
       })
       .catch((error) => {
@@ -60,6 +86,7 @@ const Sidebar = () => {
         console.error("Error fetching user groups:", error);
       });
   }, [id]);
+  console.log(groupInfo);
 
   return (
     <div className="flex h-screen m-0 p-0 ">
@@ -80,16 +107,18 @@ const Sidebar = () => {
         aria-label="Sidebar"
       >
         <div className="h-full px-0 py-0 overflow-y-auto m-0">
-          <Link to={"/"} className="flex items-center ps-2.5 mb-5">
-            <img
-              src="https://flowbite.com/docs/images/logo.svg"
-              className="h-6 me-3 sm:h-7"
-              alt="Flowbite Logo"
-            />
-            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              ChaterrBox
-            </span>
-          </Link>
+          {groupInfo && (
+            <div className="flex items-center gap-3 mb-5 px-4">
+              <img
+                src={groupInfo.foto_grupo}
+                alt={groupInfo.nombre_grupo}
+                className="w-10 h-10 rounded-full border-2 border-yellow-300 object-cover"
+              />
+              <span className="text-yellow-200 font-semibold text-base truncate max-w-[120px]">
+                {groupInfo.nombre_grupo}
+              </span>
+            </div>
+          )}
           <ul className="cursor-pointer space-y-2 font-medium m-0 p-0">
             {chats.map((chat) => (
               <li

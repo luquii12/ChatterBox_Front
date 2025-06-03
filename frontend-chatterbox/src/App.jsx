@@ -11,17 +11,21 @@ import { AuthProvider } from "./auth/AuthProvider";
 import RutaProtegida from "./auth/RutasProtegidas";
 import Group from "./layout/Group";
 import Welcome from "./layout/Welcome";
-import HelpCenter from "./layout/HelpCenter";
+import HelpCenter from "./pages/HelpCenter";
 import AccountSettings from "./layout/AccountSettings";
-import PrivacyPolicy from "./layout/PrivacyPolicy";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import JoinGroup from "./layout/JoinGroup";
 import PublicGroups from "./components/PublicGroups";
 import NotFound from "./pages/NotFound";
 import Questions from "./pages/Questions";
+import ScrollToTop from "./components/ScrollToTop";
+import About from "./pages/About";
+import Terms from "./pages/Terms";
 
 function App() {
   return (
     <AuthProvider>
+      <ScrollToTop />
       <Routes>
         <Route path="/login" element={<LoginSignup />} />
 
@@ -42,8 +46,10 @@ function App() {
           <Route path="/joinGroup" element={<JoinGroup />} />
           <Route path="/publicGroups" element={<PublicGroups />} />
           <Route path="/group/:id" element={<Group />} />
-          <Route path="questions" element={<Questions/>}/>
-
+          <Route path="/questions" element={<Questions />} />
+          <Route path="/settings" element={<AccountSettings/>}/>
+        <Route path="/about" element={<About/>}/>
+        <Route path="/terms" element={<Terms/>}/>
         </Route>
         <Route path="*" element={<NotFound/>} />
       </Routes>

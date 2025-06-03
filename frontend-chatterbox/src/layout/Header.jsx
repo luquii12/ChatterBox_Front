@@ -11,41 +11,26 @@ const Header = () => {
   const dropdownRef = useRef(null);
   const { user } = useAuth();
 
+  // Modal state for leaving group
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [leaveSuccess, setLeaveSuccess] = useState(false);
+
   // Detecta si estás en un grupo
   const isGroup = location.pathname.startsWith("/group/") && params.id;
 
-  // Estado para datos del grupo
-  const [groupInfo, setGroupInfo] = useState(null);
-
-  useEffect(() => {
-    if (isGroup) {
-      GroupServices.getGroupById(params.id)
-        .then((res) => setGroupInfo(res.data))
-        .catch(() => setGroupInfo(null));
-      GroupServices.getImagenGrupo(params.id)
-        .then((response) => {
-          const imageUrl = URL.createObjectURL(response.data);
-          setGroupInfo((prev) => ({
-            ...prev,
-            foto_grupo: imageUrl,
-          }));
-        })
-        .catch((error) => {
-          console.error("Error fetching group image:", error);
-          setGroupInfo((prev) => ({
-            ...prev,
-            foto_grupo: "https://via.placeholder.com/150", // Placeholder image
-          }));
-        });
-    } else {
-      setGroupInfo(null);
-    }
-  }, [isGroup, params.id]);
-
   const leaveGroup = () => {
-    GroupServices.leaveGroup(params.id);
+    setShowLeaveModal(true);
   };
-  console.log(groupInfo);
+
+  const confirmLeaveGroup = () => {
+    GroupServices.leaveGroup(params.id);
+    setLeaveSuccess(true);
+    setTimeout(() => {
+      setShowLeaveModal(false);
+      setLeaveSuccess(false);
+      navigate("/");
+    }, 500);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -88,18 +73,6 @@ const Header = () => {
 
         {/* Botones de la derecha */}
         <div className="flex items-center gap-4 pr-6 ">
-          {isGroup && groupInfo && (
-            <div className="flex items-center gap-3 mr-4">
-              <img
-                src={groupInfo.foto_grupo}
-                alt={groupInfo.nombre_grupo}
-                className="w-10 h-10 rounded-full border-2 border-yellow-300 object-cover"
-              />
-              <span className="text-yellow-200 font-semibold text-base truncate max-w-[120px]">
-                {groupInfo.nombre_grupo}
-              </span>
-            </div>
-          )}
           {isGroup && (
             <button
               onClick={leaveGroup}
@@ -133,9 +106,10 @@ const Header = () => {
       {/* Sidebar lateral animada */}
       <div
         ref={dropdownRef}
-        className={`fixed top-0 left-0 h-full w-64 bg-[#2A2A2A] shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-full w-64 shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
           dropdownOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        style={{ backgroundColor: "#1F2029" }}
       >
         <div className="flex flex-col h-full p-6 gap-4 text-white">
           <div className="flex justify-between items-center mb-6">
@@ -156,36 +130,18 @@ const Header = () => {
                 setDropdownOpen(false);
               }}
             >
-              👥 Groups
-            </li>
-            <li
-              className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
-              onClick={() => {
-                navigate("/publicGroups");
-                setDropdownOpen(false);
-              }}
-            >
-              🌐 Public Groups
-            </li>
-            <li
-              className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
-              onClick={() => {
-                navigate("/");
-                setDropdownOpen(false);
-              }}
-            >
-              🧑 Perfil
-            </li>
-            <li
-              className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
-              onClick={() => {
-                navigate("/acc");
-                setDropdownOpen(false);
-              }}
-            >
-              ⚙️ Ajustes
+              👥 Home
             </li>
 
+            <li
+              className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
+              onClick={() => {
+                navigate("/settings");
+                setDropdownOpen(false);
+              }}
+            >
+              🧑 Profile
+            </li>
             <li
               className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
               onClick={() => {
@@ -211,6 +167,52 @@ const Header = () => {
           <div className="mt-auto text-xs text-gray-400">© 2025 ChatterBox</div>
         </div>
       </div>
+
+      {/* Modal leave group */}
+      {showLeaveModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 100,
+          }}
+        >
+          <div className="bg-white rounded-lg p-8 max-w-sm w-full text-center">
+            {!leaveSuccess ? (
+              <>
+                <h3 className="text-xl font-bold mb-4 text-gray-800">
+                  Are you sure you want to leave this group?
+                </h3>
+                <div className="flex justify-center gap-4 mt-6">
+                  <button
+                    className="px-6 py-2 rounded bg-yellow-400 text-black font-semibold hover:bg-yellow-500 transition cursor-pointer"
+                    onClick={confirmLeaveGroup}
+                  >
+                    Yes, leave
+                  </button>
+                  <button
+                    className="px-6 py-2 rounded bg-gray-300 text-gray-800 font-semibold hover:bg-gray-400 transition cursor-pointer"
+                    onClick={() => setShowLeaveModal(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div>
+                <h3 className="text-xl font-bold mb-4 text-gray-800">
+                  You have left the group successfully!
+                </h3>
+                <p className="text-gray-600">Redirecting...</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 };

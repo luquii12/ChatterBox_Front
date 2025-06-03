@@ -20,8 +20,8 @@ class GroupServices {
     static joinGroup( id_grupo) {
         return instance.post(`/grupos/${id_grupo}/join`)
     }
-    static getpublic() {
-        return instance.get("/grupos")
+    static getpublic(nombre) {
+        return instance.get(`/grupos/publicos/disponibles?nombre=${nombre}`)
     }
     static getImagenGrupo(id) {
         return instance.get(`/grupos/${id}/foto`, {

@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
 import { ImagePlus, Lock, FileText } from "lucide-react";
 import GroupServices from "../services/GroupServices";
+import { useNavigate } from "react-router-dom";
 
 const CreateGroup = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     id_usuario: user.usuario.id_usuario,
@@ -17,6 +19,7 @@ const CreateGroup = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [imageError, setImageError] = useState(""); // Nuevo estado para error de imagen
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -34,6 +37,7 @@ const CreateGroup = () => {
         image: file,
       }));
       setImagePreview(URL.createObjectURL(file));
+      setImageError(""); // Limpiar error si selecciona imagen
     }
   };
 
@@ -42,19 +46,24 @@ const CreateGroup = () => {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-  const formData = new FormData();
-formData.append("id_usuario_creador", form.id_usuario);
-formData.append("nombre_grupo", form.name);
-formData.append("descripcion", form.description);
-formData.append("es_privado", form.isPrivate);
-if (form.image) {
-  formData.append("foto_grupo", form.image);
-}
+    // Validar que la imagen sea obligatoria
+    if (!form.image) {
+      setImageError("La imagen del grupo es obligatoria.");
+      setIsSubmitting(false);
+      return;
+    }
 
+    const formData = new FormData();
+    formData.append("id_usuario_creador", form.id_usuario);
+    formData.append("nombre_grupo", form.name);
+    formData.append("descripcion", form.description);
+    formData.append("es_privado", form.isPrivate);
+    formData.append("foto_grupo", form.image);
 
     try {
       const response = await GroupServices.createGroup(formData);
-      console.log("Grupo creado:", response);
+      // Suponiendo que el backend devuelve el id del grupo en response.data.id_grupo
+      const newGroupId = response.data?.id_grupo;
       setSubmitStatus("success");
       setForm({
         id_usuario: user.usuario.id_usuario,
@@ -64,6 +73,12 @@ if (form.image) {
         description: "",
       });
       setImagePreview(null);
+
+      if (newGroupId) {
+        setTimeout(() => {
+          navigate(`/group/${newGroupId}`);
+        }, 500);
+      }
     } catch (error) {
       console.error("Error al crear grupo:", error);
       setSubmitStatus("error");
@@ -75,10 +90,11 @@ if (form.image) {
   return (
     <div className="min-h-screen background-primary flex items-center justify-center px-3 py-5">
       <div className="background-secondary border primary-color rounded-lg p-10 w-[1000px] text-white shadow-[0_1px_10px_rgba(0,0,0,0.05)] shadow-yellow-100">
-        <h2 className="text-5xl primary-color font-semibold text-center mb-10">Create Group</h2>
+        <h2 className="text-5xl primary-color font-semibold text-center mb-10">
+          Create Group
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-
           {/* Group Name */}
           <div className="relative">
             <label className="block mb-2 text-lg">Group Name</label>
@@ -95,13 +111,17 @@ if (form.image) {
 
           {/* Image Upload */}
           <div className="relative">
-            <label className="block mb-2 text-lg">Group Image (optional)</label>
+            <label className="block mb-2 text-lg">
+              Group Image{" "}
+              <span className="text-red-400">*</span>
+            </label>
             <ImagePlus className="absolute left-3 top-2/3 -translate-y-1/2 w-5 h-5 primary-color" />
             <input
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
               className="w-full px-10 py-3 rounded background-terciary border border-gray-600"
+              required
             />
             {imagePreview && (
               <div className="mt-3">
@@ -113,6 +133,7 @@ if (form.image) {
                 />
               </div>
             )}
+            {imageError && <p className="text-red-400 mt-2">{imageError}</p>}
           </div>
 
           {/* Privacy */}
@@ -149,20 +170,24 @@ if (form.image) {
             <button
               type="submit"
               className="cursor-pointer w-[400px] mt-4 border-1 text-white py-4 rounded hover:bg-[#FFEBA7] background-terciary disabled:opacity-50"
-              style={{ borderColor: '#FFEBA7' }}
+              style={{ borderColor: "#FFEBA7" }}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Creating Group...' : 'Create Group'}
+              {isSubmitting ? "Creating Group..." : "Create Group"}
             </button>
           </div>
 
           {/* Feedback Message */}
           {submitStatus === "success" && (
-            <p className="text-green-400 text-center mt-4">Group created successfully!</p>
+            <p className="text-green-400 text-center mt-4">
+              Group created successfully!
+            </p>
           )}
 
           {submitStatus === "error" && (
-            <p className="text-red-400 text-center mt-4">Something went wrong. Please try again.</p>
+            <p className="text-red-400 text-center mt-4">
+              Something went wrong. Please try again.
+            </p>
           )}
         </form>
       </div>
