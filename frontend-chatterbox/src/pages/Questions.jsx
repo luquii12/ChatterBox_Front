@@ -42,7 +42,6 @@ const faqs = [
 
 const Questions = () => {
   const {user}=useAuth();
-  console.log(user);
   
   const [form, setForm] = useState({ name: `${user.usuario.nombre_usuario}`, email: `${user.usuario.email}`, comment: "" });
   const [sent, setSent] = useState(false);

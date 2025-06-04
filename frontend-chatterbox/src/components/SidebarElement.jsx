@@ -1,8 +1,6 @@
 
 
 const SidebarElement = ({id,name,changeChat}) => {
-console.log(name);
-
 
     return (
         <>

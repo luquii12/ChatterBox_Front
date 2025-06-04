@@ -41,7 +41,7 @@ function App() {
           }
         >
           <Route index element={<Home />} />
-          <Route path="/create" element={<Creategroup />} />
+          <Route path="/create" element={<CreateGroup />} />
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/help" element={<HelpCenter />} />
           <Route path="/accountSettings" element={<AccountSettings />} />

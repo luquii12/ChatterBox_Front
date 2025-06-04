@@ -4,7 +4,7 @@ import { useAuth } from "../auth/AuthProvider";
 import UserServices from "../services/UserServices";
 
 export default function AccountSettings() {
-  const { user } = useAuth();
+  const { user, login } = useAuth();
   const [formData, setFormData] = useState({
     nickname: user?.usuario?.apodo || "",
     fullName: user?.usuario?.nombre_usuario || "",
@@ -40,6 +40,8 @@ export default function AccountSettings() {
     UserServices.updateUser(user.usuario.id_usuario, formDatas)
       .then((response) => {
         setSuccess(true);
+        // Aquí quiero actualizar user con los nuevos valores
+        login(response.data);
         setTimeout(() => {
           setSuccess(false);
           window.location.reload();
@@ -47,7 +49,6 @@ export default function AccountSettings() {
       })
       .catch((error) => {
         console.error("Error updating user", error);
-        // Handle error appropriately, e.g., show a notification
       });
   };
 

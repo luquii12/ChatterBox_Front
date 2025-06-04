@@ -11,7 +11,6 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { user } = useAuth();
-console.log(user);
 
   // Modal state for leaving group
   const [showLeaveModal, setShowLeaveModal] = useState(false);

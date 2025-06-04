@@ -45,7 +45,6 @@ const GroupSettings = () => {
   const fetchUsers = (pageNumber) => {
     GroupServices.getGroupUsers(id, pageNumber, PAGE_SIZE).then((res) => {
       setUsers(res.data.content || []);
-      console.log(res.data.content);
       setTotalPages(res.data.totalPages || 1);
     });
   };
@@ -87,9 +86,7 @@ const GroupSettings = () => {
 
   const handleRemoveUser = (userId) => {
     GroupServices.removeUserFromGroup(id, userId).then(() => {
-      if (users.length === 1 && page > 0) {
-        console.log(users);
-        
+      if (users.length === 1 && page > 0) {        
         setPage(page - 1);
       } else {
         fetchUsers(page);

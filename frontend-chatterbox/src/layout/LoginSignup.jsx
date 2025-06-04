@@ -200,11 +200,6 @@ const LoginSignup = () => {
                               Login
                             </button>
                           </form>
-                          <p className="mb-0 mt-4 text-center">
-                            <a href="#" className="link">
-                              Forgot your password?
-                            </a>
-                          </p>
                         </div>
                       </div>
                     </div>
