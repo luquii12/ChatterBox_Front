@@ -3,7 +3,7 @@ Parte del Front del proyecto de fin de ciclo de DAW hecho por Juan Aznar, Hicham
 
 ## Instalacion 
 ```bash
-cd prototipo/
+cd frontend_chatterbox/
 
 npm install
 
