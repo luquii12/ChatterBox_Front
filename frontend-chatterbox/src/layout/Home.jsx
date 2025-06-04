@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "../components/Card";
 import GroupServices from "../services/GroupServices";
 import { useAuth } from "../auth/AuthProvider";
@@ -7,6 +8,7 @@ import Welcome from "./Welcome";
 
 
 const Home = () => {
+  const { user } = useAuth();
   const { user } = useAuth();
   const [groups, setGroups] = useState([]);
 

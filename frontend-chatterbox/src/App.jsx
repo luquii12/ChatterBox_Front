@@ -6,7 +6,7 @@ import Sidebar from "./components/Sidebar";
 import Layout from "./layout/Layout";
 import Card from "./components/Card";
 import Home from "./layout/Home";
-import Creategroup from "./layout/CreateGroup";
+import CreateGroup from "./layout/CreateGroup";
 import { AuthProvider } from "./auth/AuthProvider";
 import RutaProtegida from "./auth/RutasProtegidas";
 import Group from "./layout/Group";
