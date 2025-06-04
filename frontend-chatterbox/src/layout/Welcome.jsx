@@ -1,4 +1,8 @@
+import {  useNavigate } from "react-router";
+
 const Welcome = () => {
+
+  const navigate = useNavigate()
   return (
     <div className="min-h-screen background-primary secondary-color flex flex-col">
       <main className="flex-grow flex flex-col items-center justify-center text-center px-4 -mt-[300px]">
@@ -14,10 +18,14 @@ const Welcome = () => {
         </p>
 
         <div className="flex gap-6">
-          <button className="text-xl background-secondary text-white px-10 py-4 rounded-md hover:bg-[#2a2d44]">
+          <button className="cursor-pointer text-xl background-secondary text-white px-10 py-4 rounded-md hover:bg-[#2a2d44]" 
+          
+            onClick={() => navigate("/joinGroup")}>
+
             JOIN GROUP
           </button>
-          <button className="text-xl bg-yellow-300 text-black px-10 py-4 rounded-md hover:bg-yellow-400 primary-color ">
+          <button className="cursor-pointer text-xl bg-yellow-300 text-black px-10 py-4 rounded-md hover:bg-yellow-400  "
+            onClick={() => navigate("/create")}>
             NEW GROUP
           </button>
         </div>

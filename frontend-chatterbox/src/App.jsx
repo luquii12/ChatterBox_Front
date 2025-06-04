@@ -23,6 +23,7 @@ import About from "./pages/About";
 import Terms from "./pages/Terms";
 import ChatWithAI from "./components/ChatWithAI";
 import GroupSettings from "./layout/GroupSettings";
+import UserListAdmin from "./layout/UserListAdmin";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
         <Route path="/about" element={<About/>}/>
         <Route path="/terms" element={<Terms/>}/>
         <Route path="/chatIA" element={<ChatWithAI/>}/>
+        <Route path="/admin" element={<UserListAdmin/>}/>
         </Route>
         <Route path="*" element={<NotFound/>} />
       </Routes>

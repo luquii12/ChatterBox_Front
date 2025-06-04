@@ -11,6 +11,7 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { user } = useAuth();
+console.log(user);
 
   // Modal state for leaving group
   const [showLeaveModal, setShowLeaveModal] = useState(false);
@@ -21,7 +22,7 @@ const Header = () => {
 
   // Detecta si estás en un grupo
   const isGroup = location.pathname.startsWith("/group/") && params.id;
-
+const isAdmin=user.usuario.es_admin_general
   const leaveGroup = () => {
     setShowLeaveModal(true);
   };
@@ -185,6 +186,16 @@ const Header = () => {
             >
               🤖 Chat IA
             </li>
+            {isAdmin &&(<li
+              className="hover:bg-blue-500 hover:text-white px-4 py-2 rounded cursor-pointer transition"
+              onClick={() => {
+                navigate("/admin");
+                setDropdownOpen(false);
+              }}
+            >
+              🛡️ Admin
+            </li>)}
+            
             <li
               className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
               onClick={() => {
