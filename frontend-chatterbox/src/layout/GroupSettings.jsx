@@ -207,7 +207,7 @@ const GroupSettings = () => {
           {/* Imagen */}
           <div className="flex flex-col items-start">
             <label className="mb-1 text-base font-semibold text-yellow-200">
-              Group Image
+              Group Image <span className="text-red-400">*</span>
             </label>
             <div className="flex items-center gap-3 w-full">
               <ImageIcon className="w-5 h-5 primary-color" />
