@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 
 const Footer = () => (
-  <footer className="background-secondary text-gray-400 text-sm py-8 px-6">
-    <div className="max-w-6xl mx-auto flex flex-col items-center text-center border-b border-[#FFEBA7] pb-6">
+  <footer className="bg-background-secondary text-gray-400 text-sm py-8 px-6">
+    <div className="max-w-6xl mx-auto flex flex-col items-center text-center border-b border-primary pb-6">
       <div className="w-full flex flex-col md:flex-row justify-center gap-16">
         <div className="flex flex-col items-center">
-          <h3 className="primary-color font-semibold mb-2">HELP</h3>
+          <h3 className="text-primary font-semibold mb-2">HELP</h3>
           <ul className="space-y-1">
             <li>
               <Link to="/questions" className="hover:underline">
@@ -21,7 +21,7 @@ const Footer = () => (
         </div>
 
         <div className="flex flex-col items-center mx-70">
-          <h3 className="primary-color font-semibold mb-2">LEGAL</h3>
+          <h3 className="text-primary font-semibold mb-2">LEGAL</h3>
           <ul className="space-y-1">
             <li>
               <Link to="/terms" className="hover:underline">
@@ -37,7 +37,7 @@ const Footer = () => (
         </div>
 
         <div className="flex flex-col items-center">
-          <h3 className="primary-color font-semibold mb-2">ABOUT</h3>
+          <h3 className="text-primary font-semibold mb-2">ABOUT</h3>
           <ul className="space-y-1">
             <li>
               <Link to="/about" className="hover:underline">

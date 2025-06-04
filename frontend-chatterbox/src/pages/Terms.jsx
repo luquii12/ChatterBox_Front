@@ -3,8 +3,7 @@ import React from "react";
 const Terms = () => (
   <div className="max-w-3xl mx-auto py-10 px-4">
     <h1
-      className="text-4xl md:text-5xl font-bold mb-6 text-center"
-      style={{ color: "#F5D67B" }}
+      className="text-4xl md:text-5xl font-bold primary-color mb-6 text-center"
     >
       Terms and Conditions
     </h1>
@@ -15,8 +14,7 @@ const Terms = () => (
     <div className="space-y-6 text-gray-700 dark:text-gray-300">
       <section>
         <h2
-          className="text-xl font-semibold mb-2"
-          style={{ color: "#F5D67B" }}
+          className="text-xl font-semibold mb-2 primary-color"
         >
           1. Acceptance of Terms
         </h2>
@@ -27,8 +25,7 @@ const Terms = () => (
 
       <section>
         <h2
-          className="text-xl font-semibold mb-2"
-          style={{ color: "#F5D67B" }}
+          className="text-xl font-semibold mb-2 primary-color"
         >
           2. User Accounts
         </h2>
@@ -39,8 +36,7 @@ const Terms = () => (
 
       <section>
         <h2
-          className="text-xl font-semibold mb-2"
-          style={{ color: "#F5D67B" }}
+          className="text-xl font-semibold mb-2 primary-color"
         >
           3. Acceptable Use
         </h2>
@@ -51,8 +47,7 @@ const Terms = () => (
 
       <section>
         <h2
-          className="text-xl font-semibold mb-2"
-          style={{ color: "#F5D67B" }}
+          className="text-xl font-semibold mb-2 primary-color"
         >
           4. Content
         </h2>
@@ -63,8 +58,7 @@ const Terms = () => (
 
       <section>
         <h2
-          className="text-xl font-semibold mb-2"
-          style={{ color: "#F5D67B" }}
+          className="text-xl font-semibold mb-2 primary-color"
         >
           5. Privacy
         </h2>
@@ -75,8 +69,7 @@ const Terms = () => (
 
       <section>
         <h2
-          className="text-xl font-semibold mb-2"
-          style={{ color: "#F5D67B" }}
+          className="text-xl font-semibold mb-2 primary-color"
         >
           6. Termination
         </h2>
@@ -87,8 +80,7 @@ const Terms = () => (
 
       <section>
         <h2
-          className="text-xl font-semibold mb-2"
-          style={{ color: "#F5D67B" }}
+          className="text-xl font-semibold mb-2 primary-color"
         >
           7. Changes to Terms
         </h2>
@@ -99,8 +91,7 @@ const Terms = () => (
 
       <section>
         <h2
-          className="text-xl font-semibold mb-2"
-          style={{ color: "#F5D67B" }}
+          className="text-xl font-semibold mb-2 primary-color"
         >
           8. Contact
         </h2>

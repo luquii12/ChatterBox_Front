@@ -8,6 +8,7 @@ export default function JoinGroup() {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [imageUrls, setImageUrls] = useState({});
 
   // Modal state
   const [showModal, setShowModal] = useState(false);
@@ -20,17 +21,36 @@ export default function JoinGroup() {
     if (!search.trim()) {
       setHasSearched(true);
       setGroups([]);
+      setImageUrls({});
       return;
     }
     setLoading(true);
     setGroups([]);
+    setImageUrls({});
     setHasSearched(true);
     GroupServices.getpublic(search)
-      .then((response) => {
-        setGroups(response.data.content || []);
+      .then(async (response) => {
+        const grupos = response.data.content || [];
+        setGroups(grupos);
+
+        // Cargar imágenes
+        const urls = {};
+        await Promise.all(
+          grupos.map(async (group) => {
+            try {
+              const res = await GroupServices.getImagenGrupo(group.id_grupo);
+              const url = URL.createObjectURL(res.data);
+              urls[group.id_grupo] = url;
+            } catch {
+              urls[group.id_grupo] = null;
+            }
+          })
+        );
+        setImageUrls(urls);
       })
       .catch((error) => {
         setGroups([]);
+        setImageUrls({});
         console.log("Error fetching groups: ", error);
       })
       .finally(() => setLoading(false));
@@ -66,21 +86,26 @@ export default function JoinGroup() {
 
         <div className="relative mb-6">
           <label className="block mb-2 text-lg">Search Public Groups</label>
-          <Search className="absolute left-3 top-2/3 -translate-y-1/2 w-6 h-6 primary-color pointer-events-none" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Type group name..."
-            className="w-full px-12 py-3 rounded background-terciary border border-gray-600"
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          />
-          <button
-            onClick={handleSearch}
-            className="absolute right-0 top-16 -translate-y-1/2 px-6 py-3 rounded bg-yellow-400 text-black font-semibold hover:bg-yellow-500 transition cursor-pointer flex items-center"
-          >
-            Search
-          </button>
+          <div className="flex">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 primary-color pointer-events-none" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Type group name..."
+                className="w-full px-12 py-3 rounded background-terciary border border-gray-600"
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              />
+            </div>
+            <button
+              onClick={handleSearch}
+              className="ml-4 px-6 py-3 rounded bg-yellow-400 text-black font-semibold hover:bg-yellow-500 transition cursor-pointer flex items-center"
+              style={{ minWidth: 120 }}
+            >
+              Search
+            </button>
+          </div>
         </div>
 
         {hasSearched && !search.trim() && (
@@ -107,7 +132,7 @@ export default function JoinGroup() {
                 className="background-terciary border border-yellow-400 p-6 rounded transition-all duration-300 flex items-center space-x-4"
               >
                 <img
-                  src={group.foto_grupo}
+                  src={imageUrls[group.id_grupo] || "/default-group.png"}
                   alt="Group"
                   className="w-12 h-12 rounded-full"
                 />

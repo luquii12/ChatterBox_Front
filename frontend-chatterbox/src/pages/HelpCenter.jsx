@@ -31,7 +31,7 @@ const HelpCenter = () => {
 
 const Card = ({ icon, title }) => {
   return (
-    <div className="flex flex-col items-center justify-center bg-[#1f263b] rounded-2xl p-2 text-center primary-color hover:scale-105 transition transform duration-300 w-72 h-70 shadow-[0_3px_35px_rgba(0,0,0,0.2)] shadow-yellow-100">
+    <div className="flex flex-col items-center justify-center background-terciary rounded-2xl p-2 text-center primary-color hover:scale-105 transition transform duration-300 w-72 h-70 shadow-[0_3px_35px_rgba(0,0,0,0.2)] shadow-yellow-100">
       <div className="mb-6">{icon}</div>
       <h3 className="text-2xl font-semibold">{title}</h3>
     </div>

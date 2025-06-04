@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import GroupServices from "../services/GroupServices";
+import UserServices from "../services/UserServices";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -10,14 +11,18 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { user } = useAuth();
+console.log(user);
 
   // Modal state for leaving group
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [leaveSuccess, setLeaveSuccess] = useState(false);
 
+  // Imagen de perfil del usuario
+  const [profileImage, setProfileImage] = useState(null);
+
   // Detecta si estás en un grupo
   const isGroup = location.pathname.startsWith("/group/") && params.id;
-
+const isAdmin=user.usuario.es_admin_general
   const leaveGroup = () => {
     setShowLeaveModal(true);
   };
@@ -31,6 +36,17 @@ const Header = () => {
       navigate("/");
     }, 500);
   };
+
+  // Obtener imagen de perfil si existe
+  useEffect(() => {
+    UserServices.getUserImage(user.usuario.id_usuario)
+      .then((response) => {
+        const image = URL.createObjectURL(response.data);
+        // Si la imagen viene como blob, crea una URL temporal
+        setProfileImage(image);
+      })
+      .catch(() => setProfileImage(null));
+  }, [user.usuario.id_usuario]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -50,14 +66,19 @@ const Header = () => {
     <>
       <header className="flex justify-between items-center background-secondary text-white h-20 px-0 shadow-md relative">
         <div className="flex items-center h-full background-terciary pl-4 pr-8 gap-15 w-[240px]">
-          <div
-            onClick={() => navigate("/")}
-            className="flex items-center gap-2 cursor-pointery"
-          >
-            <div className="cursor-pointer w-10 h-10 rounded-full border-2 border-yellow-300 flex items-center justify-center">
-              <span className="text-xl">👤</span>
+          <div className="flex items-center gap-2 ">
+            <div className="w-10 h-10 rounded-full border-2 border-yellow-300 flex items-center justify-center overflow-hidden bg-gray-800">
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="w-10 h-10 object-cover rounded-full"
+                />
+              ) : (
+                <span className="text-xl">👤</span>
+              )}
             </div>
-            <span className="cursor-pointer text-base text-yellow-200 font-medium truncate max-w-[100px]">
+            <span className=" text-base text-yellow-200 font-medium truncate max-w-[100px]">
               {user.usuario.apodo}
             </span>
           </div>
@@ -72,7 +93,7 @@ const Header = () => {
         </div>
 
         {/* Botones de la derecha */}
-        <div className="flex items-center gap-4 pr-6 ">
+        <div className="flex items-center gap-4 pr-6">
           {isGroup && (
             <button
               onClick={leaveGroup}
@@ -82,13 +103,14 @@ const Header = () => {
             </button>
           )}
 
+          {/* JOIN GROUP solo visible en escritorio */}
           {!isGroup && (
             <>
               <button
                 onClick={() => {
                   navigate("/joinGroup");
                 }}
-                className="background-terciary primary-color px-4 py-2 rounded hover:bg-white hover:text-black transition cursor-pointer"
+                className="hidden md:inline-flex background-terciary primary-color px-4 py-2 rounded hover:bg-white hover:text-black transition cursor-pointer"
               >
                 JOIN GROUP
               </button>
@@ -133,6 +155,19 @@ const Header = () => {
               👥 Home
             </li>
 
+            {/* JOIN GROUP solo visible en móvil */}
+            {!isGroup && (
+              <li
+                className="md:hidden hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
+                onClick={() => {
+                  navigate("/joinGroup");
+                  setDropdownOpen(false);
+                }}
+              >
+                ➕ Join Group
+              </li>
+            )}
+
             <li
               className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
               onClick={() => {
@@ -142,6 +177,25 @@ const Header = () => {
             >
               🧑 Profile
             </li>
+            <li
+              className="hover:bg-blue-500 hover:text-white px-4 py-2 rounded cursor-pointer transition"
+              onClick={() => {
+                navigate("/chatIA");
+                setDropdownOpen(false);
+              }}
+            >
+              🤖 Chat IA
+            </li>
+            {isAdmin &&(<li
+              className="hover:bg-blue-500 hover:text-white px-4 py-2 rounded cursor-pointer transition"
+              onClick={() => {
+                navigate("/admin");
+                setDropdownOpen(false);
+              }}
+            >
+              🛡️ Admin
+            </li>)}
+            
             <li
               className="hover:bg-yellow-500 hover:text-black px-4 py-2 rounded cursor-pointer transition"
               onClick={() => {

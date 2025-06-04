@@ -3,7 +3,6 @@ import { useAuth } from '../auth/AuthProvider';
 import { use } from 'react';
 
 const user = JSON.parse(localStorage.getItem("user")); // o sessionStorage si usas eso
-console.log(user);
 
 const instance = axios.create({
     baseURL: "https://localhost:8443",

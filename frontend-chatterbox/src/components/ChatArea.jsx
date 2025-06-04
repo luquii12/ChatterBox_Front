@@ -18,8 +18,6 @@ const ChatArea = ({ selectedChat }) => {
     const storedToken = JSON.parse(localStorage.getItem("user"));
     if (storedToken) {
       setToken(storedToken.token);
-    } else {
-      console.warn("Token no encontrado");
     }
   }, []);
 
@@ -35,14 +33,11 @@ const ChatArea = ({ selectedChat }) => {
   useEffect(() => {
     if (!selectedChat || !token) return;
 
-    console.log("Conectando a WebSocket...");
-
     const ws = new WebSocket(
       `wss://localhost:8443/ws?token=${token}&chatId=${selectedChat.id_chat}`
     );
 
     ws.onopen = () => {
-      console.log("Conectado WebSocket");
       setConectado(true);
     };
 
@@ -56,14 +51,12 @@ const ChatArea = ({ selectedChat }) => {
     };
 
     ws.onclose = () => {
-      console.log("WebSocket cerrado");
       setConectado(false);
     };
 
     setSocket(ws);
 
     return () => {
-      console.log("Cerrando WebSocket anterior");
       ws.close();
       setSocket(null);
     };
@@ -71,12 +64,10 @@ const ChatArea = ({ selectedChat }) => {
 
   const enviarMensaje = () => {
     if (!contenido.trim()) {
-      console.warn("Mensaje vacío");
       return;
     }
 
     if (!socket || socket.readyState !== WebSocket.OPEN) {
-      console.warn("WebSocket no está listo para enviar");
       return;
     }
 
@@ -107,7 +98,7 @@ const ChatArea = ({ selectedChat }) => {
   }
 
   return (
-    <div className="flex-1 relative m-0 p-0">
+    <div className="flex-1 relative m-0 p-0 flex flex-col h-full">
       <header className="bg-gray-800 px-4 py-5 m-0">
         <h1 className="text-2xl font-semibold secondary-color m-0">
           {selectedChat.nombre_chat}
@@ -115,7 +106,7 @@ const ChatArea = ({ selectedChat }) => {
       </header>
       <div
         ref={scrollRef}
-        className="h-[calc(100vh-96px)] overflow-y-auto px-4 py-2 bg-gray-900 m-0"
+        className="flex-1 min-h-0 overflow-y-auto px-4 py-2 background-primary m-0"
       >
         {messages.map((message, index) => (
           <TextChat
@@ -126,13 +117,13 @@ const ChatArea = ({ selectedChat }) => {
           />
         ))}
       </div>
-      <footer className="bg-gray-800 px-4 py-4 absolute bottom-0 w-full m-0">
+      <footer className="bg-gray-800 px-4 py-4 w-full m-0">
         <div className="flex items-center m-0">
           <textarea
             rows={1}
             style={{ resize: "none" }}
             placeholder="Type a message..."
-            className="w-full max-h-32 min-h-[48px] p-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 secondary-color placeholder-secondary-color overflow-auto"
+            className="w-full max-h-32 min-h-[48px] p-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 background-terciary secondary-color placeholder-secondary-color overflow-auto"
             value={contenido}
             onChange={(e) => setContenido(e.target.value)}
             onKeyDown={(e) => {

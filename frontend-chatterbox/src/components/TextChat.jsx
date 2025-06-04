@@ -69,45 +69,6 @@ const TextChat = ({ contenido, hora, id_user }) => {
         >
           <Linkify componentDecorator={decorateLink}>{contenido}</Linkify>
         </div>
-
-        {/* Dropdown botón */}
-        <div className="absolute top-0 right-0">
-          <button
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="p-1 rounded-full hover:bg-gray-700"
-          >
-            <svg
-              className="w-4 h-4 text-gray-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z" />
-            </svg>
-          </button>
-
-          {/* Dropdown menú */}
-          {showDropdown && (
-            <div className="absolute right-0 mt-2 w-40 z-50 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
-              <ul className="text-sm">
-                {["Reply", "Forward", "Copy", "Report", "Delete"].map(
-                  (action) => (
-                    <li key={action}>
-                      <button
-                        onClick={() => {
-                          console.log(action);
-                          setShowDropdown(false);
-                        }}
-                        className="w-full text-left px-4 py-2 hover:text-blue-400"
-                      >
-                        {action}
-                      </button>
-                    </li>
-                  )
-                )}
-              </ul>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
