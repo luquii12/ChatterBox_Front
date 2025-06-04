@@ -60,7 +60,7 @@ const Questions = () => {
 
   return (
     <div className="max-w-3xl mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold text-yellow-500 mb-2">Do You Have Questions?</h1>
+      <h1 className="text-4xl font-bold primary-color mb-2">Do You Have Questions?</h1>
       <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
         We have answers (well, most of the times!)<br />
         If you have questions about plans, login, email support, or account security, you’ll find helpful answers right here.

@@ -9,7 +9,7 @@ const NotFound = () => {
     <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Texto a la izquierda */}
       <div className="flex-1 flex flex-col items-center md:items-end justify-center px-4">
-        <h1 className="text-7xl font-extrabold text-yellow-500 mb-1 leading-tight">
+        <h1 className="text-7xl font-extrabold primary-color mb-1 leading-tight">
           Oops!...
         </h1>
         <h2 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-1 leading-tight">

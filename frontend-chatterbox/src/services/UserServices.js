@@ -1,5 +1,5 @@
 
-import instance from './http';
+import instance, { multipartInstance } from './http';
 
 
 const API_URL = "/auth"
@@ -18,6 +18,14 @@ class UserServices {
     }
     static getUserPicture(id) {
         return instance.get(`/usuarios/${id}/foto-perfil`,{
+            responseType: 'blob' // Para manejar imágenes
+        });
+    }
+    static updateUser(id, data) {
+        return multipartInstance.put(`/usuarios/${id}`, data)
+    }
+    static getUserImage(id) {
+        return instance.get(`/usuarios/${id}/foto-perfil`, {
             responseType: 'blob' // Para manejar imágenes
         });
     }

@@ -3,19 +3,20 @@ import { useNavigate, Link, useParams } from "react-router";
 import GroupServices from "../services/GroupServices";
 import SidebarElement from "./SidebarElement";
 import ChatArea from "./ChatArea";
-import { Menu } from "lucide-react";
+import { Menu, Settings } from "lucide-react";
 import { AuthProvider, useAuth } from "../auth/AuthProvider";
 
 const Sidebar = () => {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false); // Estado para verificar si el usuario es admin
-  const { user } = useAuth(); // Obtiene el usuario del contexto de autenticación
-  const { id } = useParams(); // Obtiene el ID del grupo desde los parámetros de la URL
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { user } = useAuth();
+  const { id } = useParams();
+ const navigate = useNavigate();
   const changeChat = (chat) => {
     setSelectedChat(chats.find((c) => c.id_chat === chat));
-    setSidebarOpen(false); // Cierra el sidebar en móvil al seleccionar un chat
+    setSidebarOpen(false);
   };
   const [nuevoChatNombre, setNuevoChatNombre] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -28,10 +29,10 @@ const Sidebar = () => {
       id_grupo: parseInt(id),
       nombre_chat: nuevoChatNombre.trim(),
     });
-    window.location.reload(); // Recargar la página para reflejar el nuevo chat
+    window.location.reload();
 
     const nuevoChat = {
-      id_chat: Date.now(), // id temporal único
+      id_chat: Date.now(),
       nombre_chat: nuevoChatNombre.trim(),
     };
     setChats([...chats, nuevoChat]);
@@ -45,8 +46,6 @@ const Sidebar = () => {
       .catch(() => setGroupInfo(null));
     GroupServices.getImagenGrupo(id)
       .then((response) => {
-        console.log(id);
-
         const imageUrl = URL.createObjectURL(response.data);
         setGroupInfo((prev) => ({
           ...prev,
@@ -57,7 +56,7 @@ const Sidebar = () => {
         console.error("Error fetching group image:", error);
         setGroupInfo((prev) => ({
           ...prev,
-          foto_grupo: "https://via.placeholder.com/150", // Placeholder image
+          foto_grupo: "https://via.placeholder.com/150",
         }));
       });
   }, []);
@@ -65,8 +64,6 @@ const Sidebar = () => {
   useEffect(() => {
     GroupServices.getChatsFromGroup(id)
       .then((response) => {
-        console.log(response.data);
-
         setChats(response.data);
       })
       .catch((error) => {
@@ -86,19 +83,18 @@ const Sidebar = () => {
         console.error("Error fetching user groups:", error);
       });
   }, [id]);
-  console.log(groupInfo);
 
   return (
     <div className="flex h-screen m-0 p-0 ">
-      {/* Mobile Menu Toggle */}
-      <button
-        className="md:hidden absolute top-4 left-4 z-50 bg-white p-2 rounded-md shadow"
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-      >
-        <Menu className="h-6 w-6 text-gray-800" />
-      </button>
+      {!sidebarOpen && (
+        <button
+          className="md:hidden absolute top-28 right-8 z-50 bg-white p-2 rounded-md shadow"
+          onClick={() => setSidebarOpen(true)}
+        >
+          <Menu className="h-6 w-6 text-gray-800" />
+        </button>
+      )}
 
-      {/* Sidebar */}
       <aside
         id="logo-sidebar"
         className={`p-3 fixed top-0 left-0 z-40 w-64 h-full bg-gray-50 dark:bg-gray-800 transition-transform transform md:translate-x-0 ${
@@ -108,7 +104,7 @@ const Sidebar = () => {
       >
         <div className="h-full px-0 py-0 overflow-y-auto m-0">
           {groupInfo && (
-            <div className="flex items-center gap-3 mb-5 px-4">
+            <div className="flex items-center gap-3 mb-5 px-4 relative">
               <img
                 src={groupInfo.foto_grupo}
                 alt={groupInfo.nombre_grupo}
@@ -117,6 +113,13 @@ const Sidebar = () => {
               <span className="text-yellow-200 font-semibold text-base truncate max-w-[120px]">
                 {groupInfo.nombre_grupo}
               </span>
+              {isAdmin && (
+                <Settings
+                  className="w-6 h-6 text-yellow-400 cursor-pointer absolute right-0 hover:text-yellow-200 hover:scale-110 transition"
+                  title="Ajustes del grupo"
+                  onClick={() => navigate(`/group/${id}/settings`)}
+                />
+              )}
             </div>
           )}
           <ul className="cursor-pointer space-y-2 font-medium m-0 p-0">
@@ -184,7 +187,6 @@ const Sidebar = () => {
         </div>
       </aside>
 
-      {/* Modal for delete confirmation */}
       {showDeleteModal && (
         <div
           className="cursor-pointer fixed inset-0 z-50 flex items-center justify-center"
@@ -222,7 +224,6 @@ const Sidebar = () => {
         </div>
       )}
 
-      {/* Overlay (only on mobile) */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-30 z-30 md:hidden"
@@ -230,7 +231,6 @@ const Sidebar = () => {
         />
       )}
 
-      {/* Main content */}
       <main className="flex-1 p-2 overflow-hidden">
         <div className="p-2 h-full m-0 rounded-lg dark:border-gray-700">
           <ChatArea selectedChat={selectedChat} />

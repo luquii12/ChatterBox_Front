@@ -21,6 +21,8 @@ import Questions from "./pages/Questions";
 import ScrollToTop from "./components/ScrollToTop";
 import About from "./pages/About";
 import Terms from "./pages/Terms";
+import ChatWithAI from "./components/ChatWithAI";
+import GroupSettings from "./layout/GroupSettings";
 
 function App() {
   return (
@@ -48,8 +50,10 @@ function App() {
           <Route path="/group/:id" element={<Group />} />
           <Route path="/questions" element={<Questions />} />
           <Route path="/settings" element={<AccountSettings/>}/>
+        <Route path="/group/:id/settings" element={<GroupSettings/>}/>
         <Route path="/about" element={<About/>}/>
         <Route path="/terms" element={<Terms/>}/>
+        <Route path="/chatIA" element={<ChatWithAI/>}/>
         </Route>
         <Route path="*" element={<NotFound/>} />
       </Routes>

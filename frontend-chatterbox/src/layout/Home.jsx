@@ -15,7 +15,6 @@ const Home = () => {
       GroupServices.getAllGroups(user.usuario.id_usuario)
         .then((response) => {
           setGroups(response.data);
-          console.log("Grupos obtenidos:", response.data);
         })
         .catch((error) => {
           console.error("Error fetching groups:", error);

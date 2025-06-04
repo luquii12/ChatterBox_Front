@@ -97,7 +97,9 @@ const CreateGroup = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Group Name */}
           <div className="relative">
-            <label className="block mb-2 text-lg">Group Name</label>
+            <label className="block mb-2 text-lg">
+              Group Name <span className="text-red-400">*</span>
+            </label>
             <FileText className="absolute left-3 top-2/3 -translate-y-1/2 w-5 h-5 primary-color" />
             <input
               type="text"

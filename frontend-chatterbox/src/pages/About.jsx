@@ -2,17 +2,17 @@ import React from "react";
 
 const About = () => {
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4">
-      <h1 className="text-4xl md:text-5xl font-bold text-yellow-500 mb-4 text-center">About Chatterbox</h1>
+    <div className="max-w-3xl mx-auto py-10 px-4 ">
+      <h1 className="text-4xl md:text-5xl font-bold primary-color mb-4 text-center">About Chatterbox</h1>
       <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 text-center">
-        <span className="font-semibold text-yellow-500">Chatterbox</span> is a modern, secure, and user-friendly chat platform designed to connect people and groups in a fun and productive way.
+        <span className="font-semibold primary-color">Chatterbox</span> is a modern, secure, and user-friendly chat platform designed to connect people and groups in a fun and productive way.
       </p>
       <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 mb-8 text-center">
         Our mission is to make communication easy, private, and enjoyable for everyone. Whether you want to chat with friends, collaborate with classmates, or join public communities, Chatterbox gives you the tools to do it safely and efficiently.
       </p>
       <div className="flex flex-col md:flex-row justify-center gap-8 mb-10">
         <div className="flex-1 bg-white dark:bg-[#1f263b] rounded-2xl p-6 shadow-lg shadow-yellow-100">
-          <h2 className="text-xl font-semibold text-yellow-500 mb-2">Key Features</h2>
+          <h2 className="text-xl font-semibold primary-color mb-2">Key Features</h2>
           <ul className="list-disc list-inside text-left text-gray-700 dark:text-gray-300 space-y-2">
             <li>Private and public group chats</li>
             <li>Modern, responsive design</li>
@@ -23,7 +23,7 @@ const About = () => {
           </ul>
         </div>
         <div className="flex-1 bg-white dark:bg-[#1f263b] rounded-2xl p-6 shadow-lg shadow-yellow-100">
-          <h2 className="text-xl font-semibold text-yellow-500 mb-2">Our Values</h2>
+          <h2 className="text-xl font-semibold primary-color mb-2">Our Values</h2>
           <ul className="list-disc list-inside text-left text-gray-700 dark:text-gray-300 space-y-2">
             <li>Respect and inclusion</li>
             <li>User privacy first</li>

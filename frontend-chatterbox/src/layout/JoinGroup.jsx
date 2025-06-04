@@ -66,21 +66,26 @@ export default function JoinGroup() {
 
         <div className="relative mb-6">
           <label className="block mb-2 text-lg">Search Public Groups</label>
-          <Search className="absolute left-3 top-2/3 -translate-y-1/2 w-6 h-6 primary-color pointer-events-none" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Type group name..."
-            className="w-full px-12 py-3 rounded background-terciary border border-gray-600"
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          />
-          <button
-            onClick={handleSearch}
-            className="absolute right-0 top-16 -translate-y-1/2 px-6 py-3 rounded bg-yellow-400 text-black font-semibold hover:bg-yellow-500 transition cursor-pointer flex items-center"
-          >
-            Search
-          </button>
+          <div className="flex">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 primary-color pointer-events-none" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Type group name..."
+                className="w-full px-12 py-3 rounded background-terciary border border-gray-600"
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              />
+            </div>
+            <button
+              onClick={handleSearch}
+              className="ml-4 px-6 py-3 rounded bg-yellow-400 text-black font-semibold hover:bg-yellow-500 transition cursor-pointer flex items-center"
+              style={{ minWidth: 120 }}
+            >
+              Search
+            </button>
+          </div>
         </div>
 
         {hasSearched && !search.trim() && (
