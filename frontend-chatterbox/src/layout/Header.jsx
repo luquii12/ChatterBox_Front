@@ -213,7 +213,7 @@ const isAdmin=user.usuario.es_admin_general
                 navigate("/login");
               }}
             >
-              🚪 Cerrar sesión
+              🚪 Close sesion
             </li>
           </ul>
 
