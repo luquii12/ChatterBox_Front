@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "serve dist -s -n -L -p $PORT"
   },
   "dependencies": {
     "@mlc-ai/web-llm": "^0.2.79",
@@ -21,6 +21,7 @@
     "react-linkify": "^1.0.0-alpha",
     "react-router": "^7.5.3",
     "react-router-dom": "^7.6.1",
+    "serve": "^14.2.4",
     "tailwindcss": "^4.1.5"
   },
   "devDependencies": {

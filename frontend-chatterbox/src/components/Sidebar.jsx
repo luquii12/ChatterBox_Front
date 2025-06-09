@@ -13,7 +13,7 @@ const Sidebar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const { user } = useAuth();
   const { id } = useParams();
- const navigate = useNavigate();
+  const navigate = useNavigate();
   const changeChat = (chat) => {
     setSelectedChat(chats.find((c) => c.id_chat === chat));
     setSidebarOpen(false);
@@ -22,22 +22,30 @@ const Sidebar = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [chatToDelete, setChatToDelete] = useState(null);
 
-  const crearChat = () => {
-    if (!nuevoChatNombre.trim()) return;
+ const crearChat = async () => {
+  if (!nuevoChatNombre.trim()) return;
 
-    GroupServices.createChat({
+  try {
+    
+    const response = await GroupServices.createChat({
       id_grupo: parseInt(id),
       nombre_chat: nuevoChatNombre.trim(),
     });
-    window.location.reload();
 
-    const nuevoChat = {
-      id_chat: Date.now(),
-      nombre_chat: nuevoChatNombre.trim(),
-    };
-    setChats([...chats, nuevoChat]);
+    
+    const nuevoChatCreado = response.data;
+
+    
+    setChats([...chats, nuevoChatCreado]);
+
+    
     setNuevoChatNombre("");
-  };
+  } catch (error) {
+    console.error("Error creando chat:", error);
+   
+  }
+};
+
   const [groupInfo, setGroupInfo] = useState(null);
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthProvider";
 import { ImagePlus, Lock, FileText } from "lucide-react";
 import GroupServices from "../services/GroupServices";
@@ -7,14 +7,32 @@ import { useNavigate } from "react-router-dom";
 const CreateGroup = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  useEffect(() => {
+    if (!localStorage.getItem("groupPageReloaded")) {
+      localStorage.setItem("groupPageReloaded", "true");
+      window.location.reload();
+    } else {
+      localStorage.removeItem("groupPageReloaded");
+    }
+  }, []);
+
 
   const [form, setForm] = useState({
-    id_usuario: user.usuario.id_usuario,
+    id_usuario: "",
     name: "",
     image: null,
     isPrivate: false,
     description: "",
   });
+
+  useEffect(() => {
+    if (user && user.usuario && user.usuario.id_usuario) {
+      setForm((prev) => ({
+        ...prev,
+        id_usuario: user.usuario.id_usuario,
+      }));
+    }
+  }, [user]);
 
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +75,7 @@ const CreateGroup = () => {
     formData.append("id_usuario_creador", form.id_usuario);
     formData.append("nombre_grupo", form.name);
     formData.append("descripcion", form.description);
-    formData.append("es_privado", form.isPrivate);
+    formData.append("es_privado", form.isPrivate ? 1 : 0);
     formData.append("foto_grupo", form.image);
 
     try {
@@ -114,8 +132,7 @@ const CreateGroup = () => {
           {/* Image Upload */}
           <div className="relative">
             <label className="block mb-2 text-lg">
-              Group Image{" "}
-              <span className="text-red-400">*</span>
+              Group Image <span className="text-red-400">*</span>
             </label>
             <ImagePlus className="absolute left-3 top-2/3 -translate-y-1/2 w-5 h-5 primary-color" />
             <input

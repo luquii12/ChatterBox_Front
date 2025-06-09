@@ -5,7 +5,7 @@ import { use } from 'react';
 const user = JSON.parse(localStorage.getItem("user")); // o sessionStorage si usas eso
 
 const instance = axios.create({
-    baseURL: "https://localhost:8443",
+    baseURL: "https://chatterbox-production-a64a.up.railway.app",
     headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${user?.token??""}`,
@@ -13,7 +13,7 @@ const instance = axios.create({
     },
 });
 export const multipartInstance = axios.create({
-  baseURL: "https://localhost:8443",
+  baseURL: "https://chatterbox-production-a64a.up.railway.app",
   headers: {
     Authorization: `Bearer ${user?.token??""}`,
   },

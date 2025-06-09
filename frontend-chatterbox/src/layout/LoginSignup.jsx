@@ -67,17 +67,22 @@ const LoginSignup = () => {
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
+     console.log("Login submit!");
     const errors = validateLogin();
     if (Object.keys(errors).length > 0) {
       setErrorLogin(errors);
+       console.log("Login submit2!");
       return;
     }
+     console.log("Login submit3!");
     UserServices.logIn(formLogIn)
       .then((response) => {
         login(response.data);
+         console.log("Login submit4!");
         navigate("/");
       })
       .catch((error) => {
+         console.log("Login submit5!");
         let errors = {};
         if (error.status === 404) {
           errors.email = "Email no encontrado";
@@ -200,6 +205,7 @@ const LoginSignup = () => {
                               Login
                             </button>
                           </form>
+                          
                         </div>
                       </div>
                     </div>

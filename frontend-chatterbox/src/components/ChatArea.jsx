@@ -5,14 +5,13 @@ import TextChat from "./TextChat";
 const ChatArea = ({ selectedChat }) => {
   const [chat, setChat] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [contenido, setContenido] = useState("");
+  const [contenidoPorChat, setContenidoPorChat] = useState({});
   const [socket, setSocket] = useState(null);
   const [conectado, setConectado] = useState(false);
   const [token, setToken] = useState(null);
   const scrollRef = useRef(null);
 
-  const usuarioId = JSON.parse(localStorage.getItem("user"))?.usuario
-    ?.id_usuario;
+  const usuarioId = JSON.parse(localStorage.getItem("user"))?.usuario?.id_usuario;
 
   useEffect(() => {
     const storedToken = JSON.parse(localStorage.getItem("user"));
@@ -22,9 +21,13 @@ const ChatArea = ({ selectedChat }) => {
   }, []);
 
   useEffect(() => {
-    if (!selectedChat) return;
+    if (!selectedChat) {
+      setMessages([]);
+      return;
+    }
 
     setChat(selectedChat);
+    setMessages([]); // Limpiar mensajes viejos inmediatamente
     ChatServices.getAllMesajesFromChat(selectedChat.id_chat)
       .then((res) => setMessages(res.data))
       .catch((err) => console.error("Error al cargar mensajes:", err));
@@ -32,9 +35,8 @@ const ChatArea = ({ selectedChat }) => {
 
   useEffect(() => {
     if (!selectedChat || !token) return;
-
     const ws = new WebSocket(
-      `wss://localhost:8443/ws?token=${token}&chatId=${selectedChat.id_chat}`
+      `wss://chatterbox-production-a64a.up.railway.app/ws?token=${token}&chatId=${selectedChat.id_chat}`
     );
 
     ws.onopen = () => {
@@ -62,6 +64,18 @@ const ChatArea = ({ selectedChat }) => {
     };
   }, [selectedChat, token]);
 
+  // Obtener el contenido pendiente del chat seleccionado, o "" si no hay
+  const contenido = selectedChat ? contenidoPorChat[selectedChat.id_chat] || "" : "";
+
+  // Actualizar el contenido para el chat actual
+  const handleContenidoChange = (e) => {
+    const texto = e.target.value;
+    setContenidoPorChat((prev) => ({
+      ...prev,
+      [selectedChat.id_chat]: texto,
+    }));
+  };
+
   const enviarMensaje = () => {
     if (!contenido.trim()) {
       return;
@@ -78,7 +92,12 @@ const ChatArea = ({ selectedChat }) => {
     };
 
     socket.send(JSON.stringify(mensaje));
-    setContenido("");
+
+   
+    setContenidoPorChat((prev) => ({
+      ...prev,
+      [selectedChat.id_chat]: "",
+    }));
   };
 
   useEffect(() => {
@@ -125,7 +144,7 @@ const ChatArea = ({ selectedChat }) => {
             placeholder="Type a message..."
             className="w-full max-h-32 min-h-[48px] p-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 background-terciary secondary-color placeholder-secondary-color overflow-auto"
             value={contenido}
-            onChange={(e) => setContenido(e.target.value)}
+            onChange={handleContenidoChange}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
@@ -137,9 +156,7 @@ const ChatArea = ({ selectedChat }) => {
             onClick={enviarMensaje}
             disabled={!socket || socket.readyState !== WebSocket.OPEN}
             className={`ml-2 px-4 py-4 rounded-2xl text-white transition-colors duration-200 ${
-              conectado
-                ? "bg-blue-600 hover:bg-blue-700"
-                : "bg-gray-300 cursor-not-allowed"
+              conectado ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-300 cursor-not-allowed"
             }`}
           >
             Send
